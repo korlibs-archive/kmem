@@ -54,4 +54,13 @@ class KmemTest {
 		assertEquals(0x04030201, mem.getInt32(1))
 		assertEquals(0x05040302, mem.getInt32(2))
 	}
+
+	@Test
+	fun testCopy() {
+		val array = arrayOf<String?>("a", "b", "c", null, null)
+		arraycopy(array, 0, array, 1, 4)
+		assertEquals(listOf("a", "a", "b", "c", null), array.toList())
+		arraycopy(array, 2, array, 1, 3)
+		assertEquals(listOf("a", "b", "c", null, null), array.toList())
+	}
 }

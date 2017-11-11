@@ -83,6 +83,7 @@ object Generator {
 			line()
 		}
 
+		line("expect fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit")
 		for (type in TYPES) type.apply {
 			line("fun arraycopy(src: $commonName, srcPos: Int, dst: $commonName, dstPos: Int, size: Int): Unit = arraycopy(src.mem, srcPos * $bytes, dst.mem, dstPos * $bytes, size * $bytes)")
 			line("fun arraycopy(src: $karray, srcPos: Int, dst: $commonName, dstPos: Int, size: Int): Unit = arraycopy(src, srcPos, dst.mem, dstPos, size)")
@@ -101,11 +102,13 @@ object Generator {
 		}
 		line()
 
+		line("@PublishedApi expect internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit")
 		for (type in TYPES) type.apply {
 			line("@PublishedApi expect internal fun _fill(array: $karray, value: $prim, pos: Int, size: Int): Unit")
 		}
 		line()
 
+		line("inline fun <T> Array<T>.fill(value: T, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)")
 		for (type in TYPES) type.apply {
 			line("inline fun $karray.fill(value: $prim, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)")
 		}
@@ -157,7 +160,17 @@ object Generator {
 			line("inline fun $karray.as$jsName(): $jsName = this.unsafeCast<$jsName>()")
 			line("inline fun $karray.asTyped(): $jsName = this.unsafeCast<$jsName>()")
 		}
+
 		line()
+
+		line("actual fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit {")
+		line("\tif ((src === dst) && (srcPos >= dstPos)) {")
+		line("\t\tfor (n in 0 until size) dst[dstPos + n] = src[srcPos + n]")
+		line("\t} else {")
+		line("\t\tfor (n in size - 1 downTo 0) dst[dstPos + n] = src[srcPos + n]")
+		line("\t}")
+		line("}")
+
 		for (type in TYPES) type.apply {
 			line("actual fun arraycopy(src: $karray, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)")
 		}
@@ -171,6 +184,7 @@ object Generator {
 
 		line()
 
+		line("@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit = run { for (n in 0 until size) array[pos + n] = value }")
 		for (type in TYPES) type.apply {
 			line("@PublishedApi actual inline internal fun _fill(array: $karray, value: $prim, pos: Int, size: Int): Unit = run { array.asDynamic().fill(value, pos, pos + size) }")
 		}
@@ -226,6 +240,8 @@ object Generator {
 			line()
 		}
 
+		line("actual fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)")
+
 		for (type in TYPES) type.apply {
 			line("actual fun arraycopy(src: $karray, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)")
 		}
@@ -238,6 +254,7 @@ object Generator {
 		}
 		line()
 
+		line("@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)")
 		for (type in TYPES) type.apply {
 			line("@PublishedApi actual internal fun _fill(array: $karray, value: $prim, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)")
 		}

@@ -83,6 +83,7 @@ expect operator fun Float64Buffer.get(index: Int): Double
 expect operator fun Float64Buffer.set(index: Int, value: Double): Unit
 fun Float64Buffer.subarray(begin: Int, end: Int = this.size): Float64Buffer = this.mem.sliceFloat64Buffer(this.offset + begin, end - begin)
 
+expect fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit
 fun arraycopy(src: Int8Buffer, srcPos: Int, dst: Int8Buffer, dstPos: Int, size: Int): Unit = arraycopy(src.mem, srcPos * 1, dst.mem, dstPos * 1, size * 1)
 fun arraycopy(src: ByteArray, srcPos: Int, dst: Int8Buffer, dstPos: Int, size: Int): Unit = arraycopy(src, srcPos, dst.mem, dstPos, size)
 fun arraycopy(src: Int8Buffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = arraycopy(src.mem, srcPos, dst, dstPos, size)
@@ -117,12 +118,14 @@ expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, 
 expect fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit
 expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit
 
+@PublishedApi expect internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit
 @PublishedApi expect internal fun _fill(array: ByteArray, value: Byte, pos: Int, size: Int): Unit
 @PublishedApi expect internal fun _fill(array: ShortArray, value: Short, pos: Int, size: Int): Unit
 @PublishedApi expect internal fun _fill(array: IntArray, value: Int, pos: Int, size: Int): Unit
 @PublishedApi expect internal fun _fill(array: FloatArray, value: Float, pos: Int, size: Int): Unit
 @PublishedApi expect internal fun _fill(array: DoubleArray, value: Double, pos: Int, size: Int): Unit
 
+inline fun <T> Array<T>.fill(value: T, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
 inline fun ByteArray.fill(value: Byte, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
 inline fun ShortArray.fill(value: Short, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
 inline fun IntArray.fill(value: Int, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
