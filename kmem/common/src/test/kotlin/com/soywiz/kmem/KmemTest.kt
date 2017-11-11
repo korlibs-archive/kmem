@@ -63,4 +63,13 @@ class KmemTest {
 		arraycopy(array, 2, array, 1, 3)
 		assertEquals(listOf("a", "b", "c", null, null), array.toList())
 	}
+
+	@Test
+	fun testFill() {
+		val array = intArrayOf(1, 1, 1, 1, 1)
+		array.fill(2)
+		assertEquals(intArrayOf(2, 2, 2, 2, 2).toList(), array.toList())
+		array.fill(3, 1, 4)
+		assertEquals(intArrayOf(2, 3, 3, 3, 2).toList(), array.toList())
+	}
 }

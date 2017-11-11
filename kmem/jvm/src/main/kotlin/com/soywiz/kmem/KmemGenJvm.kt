@@ -91,9 +91,9 @@ actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, 
 actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceFloat64Buffer(dstPos, size) as Float64Buffer).jbuffer.put(src, srcPos, size) }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = run { (src.sliceFloat64Buffer(srcPos, size) as Float64Buffer).jbuffer.put(dst, dstPos, size) }
 
-@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)
-@PublishedApi actual internal fun _fill(array: ByteArray, value: Byte, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)
-@PublishedApi actual internal fun _fill(array: ShortArray, value: Short, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)
-@PublishedApi actual internal fun _fill(array: IntArray, value: Int, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)
-@PublishedApi actual internal fun _fill(array: FloatArray, value: Float, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)
-@PublishedApi actual internal fun _fill(array: DoubleArray, value: Double, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)
+@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
+@PublishedApi actual internal fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
+@PublishedApi actual internal fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
+@PublishedApi actual internal fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
+@PublishedApi actual internal fun _fill(array: FloatArray, value: Float, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
+@PublishedApi actual internal fun _fill(array: DoubleArray, value: Double, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)

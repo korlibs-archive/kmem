@@ -113,9 +113,9 @@ actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, 
 actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Float64Array(dst).set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(dst.asTyped().subarray(srcPos, srcPos + size), dstPos)
 
-@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit = run { for (n in 0 until size) array[pos + n] = value }
-@PublishedApi actual inline internal fun _fill(array: ByteArray, value: Byte, pos: Int, size: Int): Unit = run { array.asDynamic().fill(value, pos, pos + size) }
-@PublishedApi actual inline internal fun _fill(array: ShortArray, value: Short, pos: Int, size: Int): Unit = run { array.asDynamic().fill(value, pos, pos + size) }
-@PublishedApi actual inline internal fun _fill(array: IntArray, value: Int, pos: Int, size: Int): Unit = run { array.asDynamic().fill(value, pos, pos + size) }
-@PublishedApi actual inline internal fun _fill(array: FloatArray, value: Float, pos: Int, size: Int): Unit = run { array.asDynamic().fill(value, pos, pos + size) }
-@PublishedApi actual inline internal fun _fill(array: DoubleArray, value: Double, pos: Int, size: Int): Unit = run { array.asDynamic().fill(value, pos, pos + size) }
+@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
+@PublishedApi actual inline internal fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
+@PublishedApi actual inline internal fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
+@PublishedApi actual inline internal fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
+@PublishedApi actual inline internal fun _fill(array: FloatArray, value: Float, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
+@PublishedApi actual inline internal fun _fill(array: DoubleArray, value: Double, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }

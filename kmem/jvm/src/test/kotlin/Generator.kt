@@ -107,15 +107,15 @@ object Generator {
 		}
 		line()
 
-		line("@PublishedApi expect internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit")
+		line("@PublishedApi expect internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit")
 		for (type in TYPES) type.apply {
-			line("@PublishedApi expect internal fun _fill(array: $karray, value: $prim, pos: Int, size: Int): Unit")
+			line("@PublishedApi expect internal fun _fill(array: $karray, value: $prim, start: Int, end: Int): Unit")
 		}
 		line()
 
-		line("inline fun <T> Array<T>.fill(value: T, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)")
+		line("inline fun <T> Array<T>.fill(value: T, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)")
 		for (type in TYPES) type.apply {
-			line("inline fun $karray.fill(value: $prim, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)")
+			line("inline fun $karray.fill(value: $prim, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)")
 		}
 		line()
 
@@ -191,9 +191,9 @@ object Generator {
 
 		line()
 
-		line("@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit = run { for (n in 0 until size) array[pos + n] = value }")
+		line("@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }")
 		for (type in TYPES) type.apply {
-			line("@PublishedApi actual inline internal fun _fill(array: $karray, value: $prim, pos: Int, size: Int): Unit = run { array.asDynamic().fill(value, pos, pos + size) }")
+			line("@PublishedApi actual inline internal fun _fill(array: $karray, value: $prim, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }")
 		}
 		line()
 
@@ -263,9 +263,9 @@ object Generator {
 		}
 		line()
 
-		line("@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)")
+		line("@PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)")
 		for (type in TYPES) type.apply {
-			line("@PublishedApi actual internal fun _fill(array: $karray, value: $prim, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)")
+			line("@PublishedApi actual internal fun _fill(array: $karray, value: $prim, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)")
 		}
 		line()
 

@@ -120,16 +120,16 @@ expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, 
 expect fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit
 expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit
 
-@PublishedApi expect internal fun <T> _fill(array: Array<T>, value: T, pos: Int, size: Int): Unit
-@PublishedApi expect internal fun _fill(array: ByteArray, value: Byte, pos: Int, size: Int): Unit
-@PublishedApi expect internal fun _fill(array: ShortArray, value: Short, pos: Int, size: Int): Unit
-@PublishedApi expect internal fun _fill(array: IntArray, value: Int, pos: Int, size: Int): Unit
-@PublishedApi expect internal fun _fill(array: FloatArray, value: Float, pos: Int, size: Int): Unit
-@PublishedApi expect internal fun _fill(array: DoubleArray, value: Double, pos: Int, size: Int): Unit
+@PublishedApi expect internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit
+@PublishedApi expect internal fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit
+@PublishedApi expect internal fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit
+@PublishedApi expect internal fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit
+@PublishedApi expect internal fun _fill(array: FloatArray, value: Float, start: Int, end: Int): Unit
+@PublishedApi expect internal fun _fill(array: DoubleArray, value: Double, start: Int, end: Int): Unit
 
-inline fun <T> Array<T>.fill(value: T, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
-inline fun ByteArray.fill(value: Byte, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
-inline fun ShortArray.fill(value: Short, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
-inline fun IntArray.fill(value: Int, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
-inline fun FloatArray.fill(value: Float, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
-inline fun DoubleArray.fill(value: Double, pos: Int = 0, size: Int = this.size): Unit = _fill(this, value, pos, size)
+inline fun <T> Array<T>.fill(value: T, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
+inline fun ByteArray.fill(value: Byte, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
+inline fun ShortArray.fill(value: Short, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
+inline fun IntArray.fill(value: Int, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
+inline fun FloatArray.fill(value: Float, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
+inline fun DoubleArray.fill(value: Double, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
