@@ -7,17 +7,17 @@ expect fun MemBufferAlloc(size: Int): MemBuffer
 expect fun MemBufferWrap(array: ByteArray): MemBuffer
 expect val MemBuffer.size: Int
 
-expect fun MemBuffer._sliceInt8Buffer(byteOffset: Int, size: Int): Int8Buffer
-expect fun MemBuffer._sliceInt16Buffer(byteOffset: Int, size: Int): Int16Buffer
-expect fun MemBuffer._sliceInt32Buffer(byteOffset: Int, size: Int): Int32Buffer
-expect fun MemBuffer._sliceFloat32Buffer(byteOffset: Int, size: Int): Float32Buffer
-expect fun MemBuffer._sliceFloat64Buffer(byteOffset: Int, size: Int): Float64Buffer
+expect fun MemBuffer._sliceInt8Buffer(offset: Int, size: Int): Int8Buffer
+expect fun MemBuffer._sliceInt16Buffer(offset: Int, size: Int): Int16Buffer
+expect fun MemBuffer._sliceInt32Buffer(offset: Int, size: Int): Int32Buffer
+expect fun MemBuffer._sliceFloat32Buffer(offset: Int, size: Int): Float32Buffer
+expect fun MemBuffer._sliceFloat64Buffer(offset: Int, size: Int): Float64Buffer
 
-fun MemBuffer.sliceInt8Buffer(byteOffset: Int = 0, size: Int = (this.size - byteOffset) / 1): Int8Buffer = this._sliceInt8Buffer(byteOffset, size)
-fun MemBuffer.sliceInt16Buffer(byteOffset: Int = 0, size: Int = (this.size - byteOffset) / 2): Int16Buffer = this._sliceInt16Buffer(byteOffset, size)
-fun MemBuffer.sliceInt32Buffer(byteOffset: Int = 0, size: Int = (this.size - byteOffset) / 4): Int32Buffer = this._sliceInt32Buffer(byteOffset, size)
-fun MemBuffer.sliceFloat32Buffer(byteOffset: Int = 0, size: Int = (this.size - byteOffset) / 4): Float32Buffer = this._sliceFloat32Buffer(byteOffset, size)
-fun MemBuffer.sliceFloat64Buffer(byteOffset: Int = 0, size: Int = (this.size - byteOffset) / 8): Float64Buffer = this._sliceFloat64Buffer(byteOffset, size)
+fun MemBuffer.sliceInt8Buffer(offset: Int = 0, size: Int = (this.size / 1) - offset): Int8Buffer = this._sliceInt8Buffer(offset, size)
+fun MemBuffer.sliceInt16Buffer(offset: Int = 0, size: Int = (this.size / 2) - offset): Int16Buffer = this._sliceInt16Buffer(offset, size)
+fun MemBuffer.sliceInt32Buffer(offset: Int = 0, size: Int = (this.size / 4) - offset): Int32Buffer = this._sliceInt32Buffer(offset, size)
+fun MemBuffer.sliceFloat32Buffer(offset: Int = 0, size: Int = (this.size / 4) - offset): Float32Buffer = this._sliceFloat32Buffer(offset, size)
+fun MemBuffer.sliceFloat64Buffer(offset: Int = 0, size: Int = (this.size / 8) - offset): Float64Buffer = this._sliceFloat64Buffer(offset, size)
 
 fun MemBuffer.asInt8Buffer(): Int8Buffer = this.sliceInt8Buffer()
 fun MemBuffer.asInt16Buffer(): Int16Buffer = this.sliceInt16Buffer()
@@ -27,35 +27,35 @@ fun MemBuffer.asFloat64Buffer(): Float64Buffer = this.sliceFloat64Buffer()
 
 expect class Int8Buffer
 expect val Int8Buffer.buffer: MemBuffer
-expect val Int8Buffer.byteOffset: Int
+expect val Int8Buffer.offset: Int
 expect val Int8Buffer.size: Int
 expect operator fun Int8Buffer.get(index: Int): Byte
 expect operator fun Int8Buffer.set(index: Int, value: Byte): Unit
 
 expect class Int16Buffer
 expect val Int16Buffer.buffer: MemBuffer
-expect val Int16Buffer.byteOffset: Int
+expect val Int16Buffer.offset: Int
 expect val Int16Buffer.size: Int
 expect operator fun Int16Buffer.get(index: Int): Short
 expect operator fun Int16Buffer.set(index: Int, value: Short): Unit
 
 expect class Int32Buffer
 expect val Int32Buffer.buffer: MemBuffer
-expect val Int32Buffer.byteOffset: Int
+expect val Int32Buffer.offset: Int
 expect val Int32Buffer.size: Int
 expect operator fun Int32Buffer.get(index: Int): Int
 expect operator fun Int32Buffer.set(index: Int, value: Int): Unit
 
 expect class Float32Buffer
 expect val Float32Buffer.buffer: MemBuffer
-expect val Float32Buffer.byteOffset: Int
+expect val Float32Buffer.offset: Int
 expect val Float32Buffer.size: Int
 expect operator fun Float32Buffer.get(index: Int): Float
 expect operator fun Float32Buffer.set(index: Int, value: Float): Unit
 
 expect class Float64Buffer
 expect val Float64Buffer.buffer: MemBuffer
-expect val Float64Buffer.byteOffset: Int
+expect val Float64Buffer.offset: Int
 expect val Float64Buffer.size: Int
 expect operator fun Float64Buffer.get(index: Int): Double
 expect operator fun Float64Buffer.set(index: Int, value: Double): Unit
