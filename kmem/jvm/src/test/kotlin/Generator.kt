@@ -6,8 +6,9 @@ data class AType(
 	val prim: String,
 	val bytes: Int,
 	val int: Boolean,
-	val commonName: String = "${if (int) "Int" else "Float"}${bytes * 8}Buffer",
-	val jsName: String = "${if (int) "Int" else "Float"}${bytes * 8}Array",
+	val primSize: String = "${if (int) "Int" else "Float"}${bytes * 8}",
+	val commonName: String = "${primSize}Buffer",
+	val jsName: String = "${primSize}Array",
 	val jvmName: String = "${prim}Buffer",
 	val karray: String = "${prim}Array"
 )
@@ -55,24 +56,39 @@ object Generator {
 		}
 		line()
 		for (type in TYPES) type.apply {
-			line("fun MemBuffer.slice$commonName(offset: Int = 0, size: Int = (this.size / $bytes) - offset): $commonName = this._slice$commonName(offset, size)")
+			line("inline fun MemBuffer.slice$commonName(offset: Int = 0, size: Int = (this.size / $bytes) - offset): $commonName = this._slice$commonName(offset, size)")
 		}
 		line()
 		for (type in TYPES) type.apply {
-			line("fun MemBuffer.as$commonName(): $commonName = this.slice$commonName()")
+			line("inline fun MemBuffer.as$commonName(): $commonName = this.slice$commonName()")
+		}
+		line()
+		line("expect class DataBuffer")
+		line("expect fun MemBuffer.getData(): DataBuffer")
+		for (type in TYPES) type.apply {
+			line("expect fun DataBuffer.get$prim(index: Int): $prim")
+			line("expect fun DataBuffer.set$prim(index: Int, value: $prim): Unit")
 		}
 		line()
 
 		for (type in TYPES) type.apply {
 			line("expect class $commonName")
-			line("expect val $commonName.buffer: MemBuffer")
+			line("inline fun ${commonName}Alloc(size: Int): $commonName = MemBufferAlloc(size * $bytes).slice$commonName() // @TODO: Can't use class name directly (it fails in JS)")
+			line("expect val $commonName.mem: MemBuffer")
 			line("expect val $commonName.offset: Int")
 			line("expect val $commonName.size: Int")
 			line("expect operator fun $commonName.get(index: Int): $prim")
 			line("expect operator fun $commonName.set(index: Int, value: $prim): Unit")
+			line("fun $commonName.subarray(begin: Int, end: Int = this.size): $commonName = this.mem.slice$commonName(this.offset + begin, end - begin)")
 			line()
 		}
 
+		for (type in TYPES) type.apply {
+			line("fun arraycopy(src: $commonName, srcPos: Int, dst: $commonName, dstPos: Int, size: Int): Unit = arraycopy(src.mem, srcPos * $bytes, dst.mem, dstPos * $bytes, size * $bytes)")
+			line("fun arraycopy(src: $karray, srcPos: Int, dst: $commonName, dstPos: Int, size: Int): Unit = arraycopy(src, srcPos, dst.mem, dstPos, size)")
+			line("fun arraycopy(src: $commonName, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit = arraycopy(src.mem, srcPos, dst, dstPos, size)")
+		}
+		line()
 		for (type in TYPES) type.apply {
 			line("expect fun arraycopy(src: $karray, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit")
 		}
@@ -118,10 +134,18 @@ object Generator {
 			line("actual inline fun MemBuffer._slice$commonName(offset: Int, size: Int): $commonName = $jsName(this, offset * $bytes, size)")
 		}
 		line()
+		line("actual typealias DataBuffer = DataView")
+		line("actual fun MemBuffer.getData(): DataBuffer = DataView(this)")
+		for (type in TYPES) type.apply {
+			val optLE = if (type == INT8) "" else ", true"
+			line("actual fun DataBuffer.get$prim(index: Int): $prim = this.get$primSize(index$optLE)")
+			line("actual fun DataBuffer.set$prim(index: Int, value: $prim): Unit = run { this.set$primSize(index, value$optLE) }")
+		}
+		line()
 
 		for (type in TYPES) type.apply {
 			line("actual typealias $commonName = $jsName")
-			line("actual inline val $commonName.buffer: MemBuffer get() = this.buffer")
+			line("actual inline val $commonName.mem: MemBuffer get() = this.buffer")
 			line("actual inline val $commonName.offset: Int get() = this.byteOffset / $bytes")
 			line("actual inline val $commonName.size: Int get() = this.asDynamic().length")
 			line("actual inline operator fun $commonName.get(index: Int): $prim = this.asDynamic()[index]")
@@ -169,11 +193,11 @@ object Generator {
 		line()
 
 		for (type in TYPES) type.apply {
-			line("fun $jvmName.slice(offset: Int, size: Int): $jvmName = run { val out = this.slice(); out.position(this.position() + offset); out.limit(size); return out }")
+			line("fun $jvmName.slice(offset: Int, size: Int): $jvmName = run { val out = this.duplicate(); out.position(this.position() + offset); out.limit(out.position() + size); return out }")
 		}
 
 		line("actual class MemBuffer(val buffer: ByteBuffer, val size: Int)")
-		line("actual fun MemBufferAlloc(size: Int): MemBuffer = MemBuffer(ByteBuffer.allocateDirect((size + 0xF) and 0xF.inv()).order(ByteOrder.nativeOrder()), size)")
+		line("actual fun MemBufferAlloc(size: Int): MemBuffer = MemBuffer(ByteBuffer.allocate((size + 0xF) and 0xF.inv()).order(ByteOrder.nativeOrder()), size)")
 		line("actual fun MemBufferWrap(array: ByteArray): MemBuffer = MemBuffer(ByteBuffer.wrap(array).order(ByteOrder.nativeOrder()), array.size)")
 		line("actual inline val MemBuffer.size: Int get() = this.size")
 		line()
@@ -181,15 +205,24 @@ object Generator {
 			val asBuffer = if (type == INT8) "" else ".as$jvmName()"
 			line("actual fun MemBuffer._slice$commonName(offset: Int, size: Int): $commonName = $commonName(this, this.buffer$asBuffer.slice(offset, size))")
 		}
+
+		line()
+		line("actual typealias DataBuffer = MemBuffer")
+		line("actual fun MemBuffer.getData(): DataBuffer = this")
+		for (type in TYPES) type.apply {
+			val comp = if (type == INT8) "" else prim
+			line("actual fun DataBuffer.get$prim(index: Int): $prim = buffer.get$comp(index)")
+			line("actual fun DataBuffer.set$prim(index: Int, value: $prim): Unit = run { buffer.put$comp(index, value) }")
+		}
 		line()
 
 		for (type in TYPES) type.apply {
 			line("actual class $commonName(val mbuffer: MemBuffer, val jbuffer: $jvmName)")
-			line("actual val $commonName.buffer: MemBuffer get() = mbuffer")
+			line("actual val $commonName.mem: MemBuffer get() = mbuffer")
 			line("actual val $commonName.offset: Int get() = jbuffer.position()")
 			line("actual val $commonName.size: Int get() = jbuffer.limit()")
-			line("actual operator fun $commonName.get(index: Int): $prim = jbuffer.get(index)")
-			line("actual operator fun $commonName.set(index: Int, value: $prim): Unit = run { jbuffer.put(index, value) }")
+			line("actual operator fun $commonName.get(index: Int): $prim = jbuffer.get(jbuffer.position() + index)")
+			line("actual operator fun $commonName.set(index: Int, value: $prim): Unit = run { jbuffer.put(jbuffer.position() + index, value) }")
 			line()
 		}
 
