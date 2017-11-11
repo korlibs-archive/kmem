@@ -65,15 +65,15 @@ actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: DoubleArray, dstPos: In
 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { dst.buffer.slice(dstPos, size).put(src.buffer.slice(srcPos, size)) }
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceInt8Buffer(dstPos, size) as Int8Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = TODO()
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = run { (src.sliceInt8Buffer(srcPos, size) as Int8Buffer).jbuffer.put(dst, dstPos, size) }
 actual fun arraycopy(src: ShortArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceInt16Buffer(dstPos, size) as Int16Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = TODO()
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = run { (src.sliceInt16Buffer(srcPos, size) as Int16Buffer).jbuffer.put(dst, dstPos, size) }
 actual fun arraycopy(src: IntArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceInt32Buffer(dstPos, size) as Int32Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = TODO()
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = run { (src.sliceInt32Buffer(srcPos, size) as Int32Buffer).jbuffer.put(dst, dstPos, size) }
 actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceFloat32Buffer(dstPos, size) as Float32Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = TODO()
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = run { (src.sliceFloat32Buffer(srcPos, size) as Float32Buffer).jbuffer.put(dst, dstPos, size) }
 actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceFloat64Buffer(dstPos, size) as Float64Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = TODO()
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = run { (src.sliceFloat64Buffer(srcPos, size) as Float64Buffer).jbuffer.put(dst, dstPos, size) }
 
 @PublishedApi actual internal fun _fill(array: ByteArray, value: Byte, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)
 @PublishedApi actual internal fun _fill(array: ShortArray, value: Short, pos: Int, size: Int): Unit = Arrays.fill(array, pos, pos + size, value)

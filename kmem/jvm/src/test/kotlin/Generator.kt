@@ -110,7 +110,7 @@ object Generator {
 		line("import org.khronos.webgl.*")
 		line()
 		line("actual typealias MemBuffer = ArrayBuffer")
-		line("actual inline fun MemBufferAlloc(size: Int): MemBuffer = ArrayBuffer(size)")
+		line("actual inline fun MemBufferAlloc(size: Int): MemBuffer = ArrayBuffer((size + 0xF) and 0xF.inv())")
 		line("actual inline fun MemBufferWrap(array: ByteArray): MemBuffer = array.unsafeCast<Int8Array>().buffer")
 		line("actual inline val MemBuffer.size: Int get() = this.byteLength")
 		line()
@@ -201,7 +201,7 @@ object Generator {
 		line("actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { dst.buffer.slice(dstPos, size).put(src.buffer.slice(srcPos, size)) }")
 		for (type in TYPES) type.apply {
 			line("actual fun arraycopy(src: $karray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.slice$commonName(dstPos, size) as $commonName).jbuffer.put(src, srcPos, size) }")
-			line("actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit = TODO()")
+			line("actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit = run { (src.slice$commonName(srcPos, size) as $commonName).jbuffer.put(dst, dstPos, size) }")
 		}
 		line()
 
