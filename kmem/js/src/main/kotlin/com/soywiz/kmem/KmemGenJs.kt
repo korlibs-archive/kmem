@@ -103,15 +103,15 @@ actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: DoubleArray, dstPos: In
 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Int8Array(dst, dstPos).set(Int8Array(src, srcPos, size), 0)
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Int8Array(dst).set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(dst.asTyped().subarray(srcPos, srcPos + size), dstPos)
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src._sliceInt8Buffer(0, src.size / 1).subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: ShortArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Int16Array(dst).set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(dst.asTyped().subarray(srcPos, srcPos + size), dstPos)
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src._sliceInt16Buffer(0, src.size / 2).subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: IntArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Int32Array(dst).set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(dst.asTyped().subarray(srcPos, srcPos + size), dstPos)
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src._sliceInt32Buffer(0, src.size / 4).subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Float32Array(dst).set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(dst.asTyped().subarray(srcPos, srcPos + size), dstPos)
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src._sliceFloat32Buffer(0, src.size / 4).subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Float64Array(dst).set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(dst.asTyped().subarray(srcPos, srcPos + size), dstPos)
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src._sliceFloat64Buffer(0, src.size / 8).subarray(srcPos, srcPos + size), dstPos)
 
 @PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
 @PublishedApi actual internal fun  _fill(array: BooleanArray, value: Boolean, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }

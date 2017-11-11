@@ -9,6 +9,12 @@ class FastMemory(val buffer: MemBuffer, val size: Int) {
 
 	companion object {
 		fun alloc(size: Int): FastMemory = FastMemory(MemBufferAlloc((size + 0xF) and 0xF.inv()), size)
+		fun wrap(buffer: MemBuffer, size: Int = buffer.size): FastMemory = FastMemory(buffer, size)
+		fun wrap(array: ByteArray): FastMemory = FastMemory(MemBufferWrap(array), array.size)
+
+		operator fun invoke(size: Int): FastMemory = FastMemory(MemBufferAlloc((size + 0xF) and 0xF.inv()), size)
+		operator fun invoke(buffer: MemBuffer, size: Int = buffer.size): FastMemory = FastMemory(buffer, size)
+		operator fun invoke(array: ByteArray): FastMemory = FastMemory(MemBufferWrap(array), array.size)
 
 		fun copy(src: FastMemory, srcPos: Int, dst: FastMemory, dstPos: Int, length: Int): Unit = arraycopy(src.buffer, srcPos, dst.buffer, dstPos, length)
 		fun copy(src: FastMemory, srcPos: Int, dst: ByteArray, dstPos: Int, length: Int): Unit = arraycopy(src.buffer, srcPos, dst, dstPos, length)

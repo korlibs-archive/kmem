@@ -198,7 +198,7 @@ object Generator {
 		line("actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Int8Array(dst, dstPos).set(Int8Array(src, srcPos, size), 0)")
 		for (type in TYPES) type.apply {
 			line("actual fun arraycopy(src: $karray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = $jsName(dst).set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)")
-			line("actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit = dst.asTyped().set(dst.asTyped().subarray(srcPos, srcPos + size), dstPos)")
+			line("actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src._slice$commonName(0, src.size / $bytes).subarray(srcPos, srcPos + size), dstPos)")
 		}
 
 		line()
@@ -273,7 +273,7 @@ object Generator {
 		line("actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { dst.buffer.slice(dstPos, size).put(src.buffer.slice(srcPos, size)) }")
 		for (type in TYPES) type.apply {
 			line("actual fun arraycopy(src: $karray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.slice$commonName(dstPos, size) as $commonName).jbuffer.put(src, srcPos, size) }")
-			line("actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit = run { (src.slice$commonName(srcPos, size) as $commonName).jbuffer.put(dst, dstPos, size) }")
+			line("actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: $karray, dstPos: Int, size: Int): Unit = run { (src.slice$commonName(srcPos, size) as $commonName).jbuffer.get(dst, dstPos, size) }")
 		}
 		line()
 
