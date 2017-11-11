@@ -221,8 +221,8 @@ object Generator {
 			line("actual val $commonName.mem: MemBuffer get() = mbuffer")
 			line("actual val $commonName.offset: Int get() = jbuffer.position()")
 			line("actual val $commonName.size: Int get() = jbuffer.limit()")
-			line("actual operator fun $commonName.get(index: Int): $prim = jbuffer.get(jbuffer.position() + index)")
-			line("actual operator fun $commonName.set(index: Int, value: $prim): Unit = run { jbuffer.put(jbuffer.position() + index, value) }")
+			line("actual operator fun $commonName.get(index: Int): $prim = jbuffer.get(offset + index)")
+			line("actual operator fun $commonName.set(index: Int, value: $prim): Unit = run { jbuffer.put(offset + index, value) }")
 			line()
 		}
 
