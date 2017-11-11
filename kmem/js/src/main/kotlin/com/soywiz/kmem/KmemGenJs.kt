@@ -81,6 +81,20 @@ actual fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int,
 		for (n in size - 1 downTo 0) dst[dstPos + n] = src[srcPos + n]
 	}
 }
+actual fun  arraycopy(src: BooleanArray, srcPos: Int, dst: BooleanArray, dstPos: Int, size: Int): Unit {
+	if ((src === dst) && (srcPos >= dstPos)) {
+		for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
+	} else {
+		for (n in size - 1 downTo 0) dst[dstPos + n] = src[srcPos + n]
+	}
+}
+actual fun  arraycopy(src: LongArray, srcPos: Int, dst: LongArray, dstPos: Int, size: Int): Unit {
+	if ((src === dst) && (srcPos >= dstPos)) {
+		for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
+	} else {
+		for (n in size - 1 downTo 0) dst[dstPos + n] = src[srcPos + n]
+	}
+}
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: ShortArray, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)

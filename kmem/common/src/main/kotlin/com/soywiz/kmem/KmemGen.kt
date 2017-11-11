@@ -83,7 +83,6 @@ expect operator fun Float64Buffer.get(index: Int): Double
 expect operator fun Float64Buffer.set(index: Int, value: Double): Unit
 fun Float64Buffer.subarray(begin: Int, end: Int = this.size): Float64Buffer = this.mem.sliceFloat64Buffer(this.offset + begin, end - begin)
 
-expect fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit
 fun arraycopy(src: Int8Buffer, srcPos: Int, dst: Int8Buffer, dstPos: Int, size: Int): Unit = arraycopy(src.mem, srcPos * 1, dst.mem, dstPos * 1, size * 1)
 fun arraycopy(src: ByteArray, srcPos: Int, dst: Int8Buffer, dstPos: Int, size: Int): Unit = arraycopy(src, srcPos, dst.mem, dstPos, size)
 fun arraycopy(src: Int8Buffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = arraycopy(src.mem, srcPos, dst, dstPos, size)
@@ -100,6 +99,9 @@ fun arraycopy(src: Float64Buffer, srcPos: Int, dst: Float64Buffer, dstPos: Int, 
 fun arraycopy(src: DoubleArray, srcPos: Int, dst: Float64Buffer, dstPos: Int, size: Int): Unit = arraycopy(src, srcPos, dst.mem, dstPos, size)
 fun arraycopy(src: Float64Buffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = arraycopy(src.mem, srcPos, dst, dstPos, size)
 
+expect fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit
+expect fun  arraycopy(src: BooleanArray, srcPos: Int, dst: BooleanArray, dstPos: Int, size: Int): Unit
+expect fun  arraycopy(src: LongArray, srcPos: Int, dst: LongArray, dstPos: Int, size: Int): Unit
 expect fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit
 expect fun arraycopy(src: ShortArray, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit
 expect fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit

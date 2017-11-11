@@ -71,6 +71,8 @@ actual operator fun Float64Buffer.get(index: Int): Double = jbuffer.get(offset +
 actual operator fun Float64Buffer.set(index: Int, value: Double): Unit = run { jbuffer.put(offset + index, value) }
 
 actual fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
+actual fun  arraycopy(src: BooleanArray, srcPos: Int, dst: BooleanArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
+actual fun  arraycopy(src: LongArray, srcPos: Int, dst: LongArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
 actual fun arraycopy(src: ShortArray, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
 actual fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
