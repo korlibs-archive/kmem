@@ -1,3 +1,3 @@
 package com.soywiz.kmem
 
-val KMEM_VERSION = "0.0.2"
+val KMEM_VERSION = "0.0.3-SNAPSHOT"
