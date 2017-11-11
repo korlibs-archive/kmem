@@ -114,6 +114,8 @@ actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int,
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(dst.asTyped().subarray(srcPos, srcPos + size), dstPos)
 
 @PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
+@PublishedApi actual internal fun  _fill(array: BooleanArray, value: Boolean, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
+@PublishedApi actual internal fun  _fill(array: LongArray, value: Long, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
 @PublishedApi actual inline internal fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
 @PublishedApi actual inline internal fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
 @PublishedApi actual inline internal fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }

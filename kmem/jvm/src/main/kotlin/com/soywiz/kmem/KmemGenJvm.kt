@@ -92,6 +92,8 @@ actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int,
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = run { (src.sliceFloat64Buffer(srcPos, size) as Float64Buffer).jbuffer.put(dst, dstPos, size) }
 
 @PublishedApi actual internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
+@PublishedApi actual internal fun  _fill(array: BooleanArray, value: Boolean, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
+@PublishedApi actual internal fun  _fill(array: LongArray, value: Long, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
 @PublishedApi actual internal fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
 @PublishedApi actual internal fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
 @PublishedApi actual internal fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
