@@ -34,10 +34,12 @@ class KmemTest {
 	fun testArrayCopyOverlapping() {
 		val i32 = Int32BufferAlloc(10)
 		i32[0] = 0x01020304
+		i32[1] = 0x05060708
 		arraycopy(i32, 0, i32, 1, 4)
 		assertEquals(0x01020304, i32[0])
 		assertEquals(0x01020304, i32[1])
-		assertEquals(0x00000000, i32[2])
+		assertEquals(0x05060708, i32[2])
 		assertEquals(0x00000000, i32[3])
+		assertEquals(0x00000000, i32[4])
 	}
 }
