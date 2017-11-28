@@ -1,5 +1,6 @@
 package com.soywiz.kmem
 
+@Suppress("NOTHING_TO_INLINE")
 class UByteArray(val data: ByteArray) {
 	constructor(size: Int) : this(ByteArray(size))
 
