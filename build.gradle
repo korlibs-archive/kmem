@@ -1,5 +1,5 @@
 buildscript {
-	ext.projectVersion = '0.3.1-SNAPSHOT'
+	ext.projectVersion = '0.3.1'
 	ext.projectName = 'kmem'
 	ext.projectGroup = 'com.soywiz'
 	ext.projectDesc = 'kmem: Fast memory for Kotlin Common (JVM and JS) using Buffers and Typed Arrays'
