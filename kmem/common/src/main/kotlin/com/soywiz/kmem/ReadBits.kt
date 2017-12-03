@@ -79,9 +79,3 @@ fun ByteArray.readIntArray_be(o: Int, count: Int): IntArray = this.readTypedArra
 fun ByteArray.readLongArray_be(o: Int, count: Int): LongArray = this.readTypedArray(o, count, 8, { LongArray(count) }, { array, n, pos -> array[n] = readS64_be(pos) })
 fun ByteArray.readFloatArray_be(o: Int, count: Int): FloatArray = this.readTypedArray(o, count, 4, { FloatArray(count) }, { array, n, pos -> array[n] = readF32_be(pos) })
 fun ByteArray.readDoubleArray_be(o: Int, count: Int): DoubleArray = this.readTypedArray(o, count, 8, { DoubleArray(count) }, { array, n, pos -> array[n] = readF64_be(pos) })
-
-private fun Int.signExtend(bits: Int) = (this shl (32 - bits)) shr (32 - bits)
-private fun Long.signExtend(bits: Int) = (this shl (64 - bits)) shr (64 - bits)
-
-private fun Byte.toUnsigned() = this.toInt() and 0xFF
-private fun Int.toUnsigned() = this.toLong() and 0xFFFFFFFFL

@@ -52,5 +52,3 @@ fun ByteArray.writeArray_be(o: Int, array: IntArray) = writeTypedArray(o, 4, arr
 fun ByteArray.writeArray_be(o: Int, array: LongArray) = writeTypedArray(o, 8, array.indices) { p, n -> write64_be(p, array[n]) }
 fun ByteArray.writeArray_be(o: Int, array: FloatArray) = writeTypedArray(o, 4, array.indices) { p, n -> writeF32_be(p, array[n]) }
 fun ByteArray.writeArray_be(o: Int, array: DoubleArray) = writeTypedArray(o, 8, array.indices) { p, n -> writeF64_be(p, array[n]) }
-
-private fun Int.extract8(offset: Int): Int = (this ushr offset) and 0xFF
