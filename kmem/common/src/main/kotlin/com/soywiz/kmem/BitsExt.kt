@@ -12,6 +12,25 @@ fun Int.reverseBytes(): Int {
 	return (v0 shl 24) or (v1 shl 16) or (v2 shl 8) or (v3 shl 0)
 }
 
+
+fun Short.reverseBytes(): Short {
+	val low = ((this.toInt() ushr 0) and 0xFF)
+	val high = ((this.toInt() ushr 8) and 0xFF)
+	return ((high and 0xFF) or (low shl 8)).toShort()
+}
+
+fun Char.reverseBytes(): Char {
+	val low = ((this.toInt() ushr 0) and 0xFF)
+	val high = ((this.toInt() ushr 8) and 0xFF)
+	return ((high and 0xFF) or (low shl 8)).toChar()
+}
+
+fun Long.reverseBytes(): Long {
+	val v0 = (this ushr 0).toInt().reverseBytes().toLong() and 0xFFFFFFFFL
+	val v1 = (this ushr 32).toInt().reverseBytes().toLong() and 0xFFFFFFFFL
+	return (v0 shl 32) or (v1 shl 0)
+}
+
 fun Int.reverseBits(): Int {
 	var v = this
 	v = ((v ushr 1) and 0x55555555) or ((v and 0x55555555) shl 1) // swap odd and even bits

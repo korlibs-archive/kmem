@@ -1,7 +1,5 @@
 package com.soywiz.kmem
 
-import com.soywiz.kmem.util.format
-import com.soywiz.kmem.util.reverseBytes
 import kotlin.test.assertEquals
 
 class BitsTest {

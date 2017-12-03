@@ -71,7 +71,7 @@ class KmemTest {
 
 	@Test
 	fun testCopy() {
-		val array = arrayOf<String?>("a", "b", "c", null, null)
+		val array = arrayOf("a", "b", "c", null, null)
 		arraycopy(array, 0, array, 1, 4)
 		assertEquals(listOf("a", "a", "b", "c", null), array.toList())
 		arraycopy(array, 2, array, 1, 3)
