@@ -20,6 +20,7 @@ buildscript {
 
 	dependencies {
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+		classpath "gradle.plugin.com.soywiz:korlibs-build-gradle-plugin:0.1.2"
 	}
 }
 
@@ -27,4 +28,4 @@ new File(rootProject.rootDir, "kmem/common/src/main/kotlin/com/soywiz/kmem/KmemV
 		"package com.soywiz.kmem\n\ninternal val KMEM_VERSION = \"$projectVersion\""
 )
 
-apply from: "korlibs.gradle"
+apply plugin: 'com.soywiz.korlibs-build-gradle-plugin'
