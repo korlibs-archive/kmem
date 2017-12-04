@@ -24,8 +24,8 @@ buildscript {
 	}
 }
 
-new File(rootProject.rootDir, "kmem/common/src/main/kotlin/com/soywiz/kmem/KmemVersion.kt").write(
-		"package com.soywiz.kmem\n\ninternal val KMEM_VERSION = \"$projectVersion\""
-)
-
 apply plugin: 'com.soywiz.korlibs-build-gradle-plugin'
+
+def verFile = new File(rootProject.rootDir, "kmem/common/src/main/kotlin/com/soywiz/kmem/KmemVersion.kt")
+verFile.parentFile.mkdirs()
+verFile.write("package com.soywiz.kmem\n\ninternal val KMEM_VERSION = \"$projectVersion\"")
