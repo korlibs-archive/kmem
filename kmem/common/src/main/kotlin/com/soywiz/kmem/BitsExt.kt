@@ -84,9 +84,15 @@ inline fun Int.mask(): Int = (1 shl this) - 1
 inline fun Long.mask(): Long = (1L shl this.toInt()) - 1L
 fun Int.toUInt(): Long = this.toLong() and 0xFFFFFFFFL
 fun Int.getBits(offset: Int, count: Int): Int = (this ushr offset) and count.mask()
+
 fun Int.extract(offset: Int, count: Int): Int = (this ushr offset) and count.mask()
 fun Int.extract(offset: Int): Boolean = ((this ushr offset) and 1) != 0
 fun Int.extract8(offset: Int): Int = (this ushr offset) and 0xFF
+fun Int.extract16(offset: Int): Int = (this ushr offset) and 0xFFFF
+
+fun Int.extractSigned(offset: Int, count: Int): Int = ((this ushr offset) and count.mask()).signExtend(count)
+fun Int.extract8Signed(offset: Int): Int = (((this ushr offset) and 0xFF) shl 24) shr 24
+fun Int.extract16Signed(offset: Int): Int = (((this ushr offset) and 0xFFFF) shl 16) shr 16
 
 fun Int.extractScaled(offset: Int, count: Int, scale: Int): Int = (extract(offset, count) * scale) / count.mask()
 fun Int.extractScaledf01(offset: Int, count: Int): Double = extract(offset, count).toDouble() / count.mask().toDouble()
