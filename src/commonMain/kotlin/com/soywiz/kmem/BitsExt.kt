@@ -83,8 +83,11 @@ fun Long.signExtend(bits: Int): Long = (this shl (64 - bits)) shr (64 - bits)
 fun Long.signExtend8(): Long = this shl 24 shr 24
 fun Long.signExtend16(): Long = this shl 16 shr 16
 
-fun Byte.toUnsigned() = this.toInt() and 0xFF
-fun Int.toUnsigned() = this.toLong() and 0xFFFFFFFFL
+fun Byte.toUnsigned() = this.unsigned
+fun Int.toUnsigned() = this.unsigned
+
+val Byte.unsigned get() = this.toInt() and 0xFF
+val Int.unsigned get() = this.toLong() and 0xFFFFFFFFL
 
 inline fun Int.mask(): Int = (1 shl this) - 1
 inline fun Long.mask(): Long = (1L shl this.toInt()) - 1L
