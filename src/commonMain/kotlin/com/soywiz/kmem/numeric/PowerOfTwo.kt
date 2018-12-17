@@ -12,4 +12,6 @@ val Int.nextPowerOfTwo: Int get() {
     return v
 }
 
+val Int.prevPowerOfTwo: Int get() = if (isPowerOfTwo) this else (nextPowerOfTwo ushr 1)
+
 val Int.isPowerOfTwo: Boolean get() = this.nextPowerOfTwo == this

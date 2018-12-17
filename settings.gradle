@@ -21,3 +21,5 @@ rootProject.name = (new File(rootProject.projectDir, 'gradle.properties')).withI
     properties.load(it)
     properties
 }.getProperty("project.name")
+
+include ':template'

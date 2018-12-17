@@ -1,5 +1,7 @@
 package com.soywiz.kmem
 
+import com.soywiz.kmem.internal.udiv
+import com.soywiz.kmem.internal.urem
 import kotlin.math.*
 
 

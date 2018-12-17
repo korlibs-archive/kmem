@@ -2,6 +2,7 @@
 
 package com.soywiz.kmem
 
+import com.soywiz.kmem.internal.ult
 import kotlin.math.*
 
 inline fun Float.reinterpretAsInt() = this.toBits()
@@ -204,7 +205,6 @@ fun umul32_64(a: Int, b: Int, result: IntArray = IntArray(2)): IntArray {
 			result[1] = if (result[0] < 0) -1 else 0
 		}
 		else -> {
-
 			val a00 = a and 0xFFFF
 			val a16 = a ushr 16
 			val b00 = b and 0xFFFF
