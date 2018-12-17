@@ -82,3 +82,26 @@ infix fun Int.uge(that: Int) = Int.compareUnsigned(this, that) >= 0
 
 @Deprecated("Deprecated. Use Kotlin unsigned types.")
 fun Int.compareToUnsigned(that: Int) = Int.compareUnsigned(this, that)
+
+@Deprecated("", ReplaceWith("this.unsigned"))
+fun Byte.toUnsigned() = this.unsigned
+
+@Deprecated("", ReplaceWith("this.unsigned"))
+fun Int.toUnsigned() = this.unsigned
+
+val Float.niceStr: String get() = if (this.toLong().toFloat() == this) "${this.toLong()}" else "$this"
+val Double.niceStr: String get() = if (this.toLong().toDouble() == this) "${this.toLong()}" else "$this"
+
+fun arraycopyAny(src: Any, srcPos: Int, dst: Any, dstPos: Int, size: Int): Unit {
+    when (src) {
+        is ByteArray -> arraycopy(src, srcPos, dst as ByteArray, dstPos, size)
+        //is CharArray -> arraycopy(src, srcPos, dst as CharArray, dstPos, size)
+        is ShortArray -> arraycopy(src, srcPos, dst as ShortArray, dstPos, size)
+        is IntArray -> arraycopy(src, srcPos, dst as IntArray, dstPos, size)
+        is FloatArray -> arraycopy(src, srcPos, dst as FloatArray, dstPos, size)
+        is DoubleArray -> arraycopy(src, srcPos, dst as DoubleArray, dstPos, size)
+        is LongArray -> arraycopy(src, srcPos, dst as LongArray, dstPos, size)
+        is MemBuffer -> arraycopy(src, srcPos, dst as MemBuffer, dstPos, size)
+        else -> error("Not a valid array $src")
+    }
+}
