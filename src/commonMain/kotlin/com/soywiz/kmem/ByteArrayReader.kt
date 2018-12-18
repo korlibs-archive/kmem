@@ -3,6 +3,7 @@ package com.soywiz.kmem
 class ByteArrayReader(val data: ByteArray, val start: Int, val size: Int = 0) {
     private var offset = start
     val remaining get() = size - offset
+    val hasMore get() = remaining > 0
 
     private fun <T> move(count: Int, callback: ByteArray.(Int) -> T): T {
         val res = callback(data, this.offset)
@@ -49,6 +50,7 @@ inline class ByteArrayReaderLE(val bar: ByteArrayReader)
 
 val ByteArrayReaderLE.size get() = bar.size
 val ByteArrayReaderLE.remaining get() = bar.remaining
+val ByteArrayReaderLE.hasMore get() = bar.hasMore
 fun ByteArrayReaderLE.u8() = bar.u8()
 fun ByteArrayReaderLE.s8() = bar.s8()
 fun ByteArrayReaderLE.u16() = bar.u16LE()
@@ -65,6 +67,7 @@ inline class ByteArrayReaderBE(val bar: ByteArrayReader)
 
 val ByteArrayReaderBE.size get() = bar.size
 val ByteArrayReaderBE.remaining get() = bar.remaining
+val ByteArrayReaderBE.hasMore get() = bar.hasMore
 fun ByteArrayReaderBE.u8() = bar.u8()
 fun ByteArrayReaderBE.s8() = bar.s8()
 fun ByteArrayReaderBE.u16() = bar.u16BE()

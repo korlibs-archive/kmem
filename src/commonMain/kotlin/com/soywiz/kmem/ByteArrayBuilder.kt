@@ -28,37 +28,40 @@ class ByteArrayBuilder private constructor(var data: ByteArray, size: Int = data
 
     fun append(v: Byte) = this.apply { prepare(1) { data[_size] = v } }
 
-    fun appendByte(v: Int) = this.apply { prepare(1) { data[_size] = v.toByte() } }
-    fun appendBytes(vararg v: Byte) = append(v)
-    fun appendBytes(vararg v: Int) {
+    fun append(vararg v: Byte) = append(v)
+    fun append(vararg v: Int) = this.apply {
         prepare(v.size) {
             for (n in 0 until v.size) this.data[this._size + n] = v[n].toByte()
         }
     }
 
-    fun appendShort(v: Int, little: Boolean) = this.apply { prepare(2) { data.write16(_size, v, little) } }
-    fun appendShortBE(v: Int) = this.apply { prepare(2) { data.write16BE(_size, v) } }
-    fun appendShortLE(v: Int) = this.apply { prepare(2) { data.write16LE(_size, v) } }
+    fun appendByte(v: Int) = this.apply { prepare(1) { data[_size] = v.toByte() } }
 
-    fun append24Bits(v: Int, little: Boolean) = this.apply { prepare(3) { data.write24(_size, v, little) } }
-    fun append24BitsBE(v: Int) = this.apply { prepare(3) { data.write24BE(_size, v) } }
-    fun append24BitsLE(v: Int) = this.apply { prepare(3) { data.write24LE(_size, v) } }
+    fun s8(v: Int) = appendByte(v)
 
-    fun appendInt(v: Int, little: Boolean) = this.apply { prepare(4) { data.write32(_size, v, little) } }
-    fun appendIntLE(v: Int) = this.apply { prepare(4) { data.write32LE(_size, v) } }
-    fun appendIntBE(v: Int) = this.apply { prepare(4) { data.write32BE(_size, v) } }
+    fun s16(v: Int, little: Boolean) = this.apply { prepare(2) { data.write16(_size, v, little) } }
+    fun s16LE(v: Int) = this.apply { prepare(2) { data.write16LE(_size, v) } }
+    fun s16BE(v: Int) = this.apply { prepare(2) { data.write16BE(_size, v) } }
 
-    fun appendHalfFloat(v: Float16, little: Boolean) = this.apply { prepare(2) { data.writeF16(_size, v, little) } }
-    fun appendHalfFloatLE(v: Float16) = this.apply { prepare(2) { data.writeF16LE(_size, v) } }
-    fun appendHalfFloatBE(v: Float16) = this.apply { prepare(2) { data.writeF16BE(_size, v) } }
+    fun s24(v: Int, little: Boolean) = this.apply { prepare(3) { data.write24(_size, v, little) } }
+    fun s24LE(v: Int) = this.apply { prepare(3) { data.write24LE(_size, v) } }
+    fun s24BE(v: Int) = this.apply { prepare(3) { data.write24BE(_size, v) } }
 
-    fun appendFloat(v: Float, little: Boolean) = this.apply { prepare(4) { data.writeF32(_size, v, little) } }
-    fun appendFloatLE(v: Float) = this.apply { prepare(4) { data.writeF32LE(_size, v) } }
-    fun appendFloatBE(v: Float) = this.apply { prepare(4) { data.writeF32BE(_size, v) } }
+    fun s32(v: Int, little: Boolean) = this.apply { prepare(4) { data.write32(_size, v, little) } }
+    fun s32LE(v: Int) = this.apply { prepare(4) { data.write32LE(_size, v) } }
+    fun s32BE(v: Int) = this.apply { prepare(4) { data.write32BE(_size, v) } }
 
-    fun appendDouble(v: Double, little: Boolean) = this.apply { prepare(8) { data.writeF64(_size, v, little) } }
-    fun appendDoubleLE(v: Double) = this.apply { prepare(8) { data.writeF64LE(_size, v) } }
-    fun appendDoubleBE(v: Double) = this.apply { prepare(8) { data.writeF64BE(_size, v) } }
+    fun f16(v: Float16, little: Boolean) = this.apply { prepare(2) { data.writeF16(_size, v, little) } }
+    fun f16LE(v: Float16) = this.apply { prepare(2) { data.writeF16LE(_size, v) } }
+    fun f16BE(v: Float16) = this.apply { prepare(2) { data.writeF16BE(_size, v) } }
+
+    fun f32(v: Float, little: Boolean) = this.apply { prepare(4) { data.writeF32(_size, v, little) } }
+    fun f32LE(v: Float) = this.apply { prepare(4) { data.writeF32LE(_size, v) } }
+    fun f32BE(v: Float) = this.apply { prepare(4) { data.writeF32BE(_size, v) } }
+
+    fun f64(v: Double, little: Boolean) = this.apply { prepare(8) { data.writeF64(_size, v, little) } }
+    fun f64LE(v: Double) = this.apply { prepare(8) { data.writeF64LE(_size, v) } }
+    fun f64BE(v: Double) = this.apply { prepare(8) { data.writeF64BE(_size, v) } }
 
     fun clear() {
         _size = 0
@@ -73,14 +76,15 @@ val ByteArrayBuilderLE.size get() = bab.size
 fun ByteArrayBuilderLE.append(array: ByteArray, offset: Int = 0, len: Int = array.size - offset) = bab.append(array, offset, len)
 fun ByteArrayBuilderLE.append(v: Byte) = bab.append(v)
 fun ByteArrayBuilderLE.appendByte(v: Int) = bab.appendByte(v)
-fun ByteArrayBuilderLE.appendBytes(vararg v: Byte) = bab.appendBytes(*v)
-fun ByteArrayBuilderLE.appendBytes(vararg v: Int) = bab.appendBytes(*v)
-fun ByteArrayBuilderLE.appendShort(v: Int) = bab.appendShortLE(v)
-fun ByteArrayBuilderLE.append24Bits(v: Int) = bab.append24BitsLE(v)
-fun ByteArrayBuilderLE.appendInt(v: Int) = bab.appendIntLE(v)
-fun ByteArrayBuilderLE.appendHalfFloat(v: Float16) = bab.appendHalfFloatLE(v)
-fun ByteArrayBuilderLE.appendFloat(v: Float) = bab.appendFloatLE(v)
-fun ByteArrayBuilderLE.appendDouble(v: Double) = bab.appendDoubleLE(v)
+fun ByteArrayBuilderLE.append(vararg v: Byte) = bab.append(*v)
+fun ByteArrayBuilderLE.append(vararg v: Int) = bab.append(*v)
+fun ByteArrayBuilderLE.s8(v: Int) = bab.s8(v)
+fun ByteArrayBuilderLE.s16(v: Int) = bab.s16LE(v)
+fun ByteArrayBuilderLE.s24(v: Int) = bab.s24LE(v)
+fun ByteArrayBuilderLE.s32(v: Int) = bab.s32LE(v)
+fun ByteArrayBuilderLE.f16(v: Float16) = bab.f16LE(v)
+fun ByteArrayBuilderLE.f32(v: Float) = bab.f32LE(v)
+fun ByteArrayBuilderLE.f64(v: Double) = bab.f64LE(v)
 fun ByteArrayBuilderLE.clear() = bab.clear()
 fun ByteArrayBuilderLE.toByteArray(): ByteArray = bab.toByteArray()
 
@@ -90,14 +94,15 @@ val ByteArrayBuilderBE.size get() = bab.size
 fun ByteArrayBuilderBE.append(array: ByteArray, offset: Int = 0, len: Int = array.size - offset) = bab.append(array, offset, len)
 fun ByteArrayBuilderBE.append(v: Byte) = bab.append(v)
 fun ByteArrayBuilderBE.appendByte(v: Int) = bab.appendByte(v)
-fun ByteArrayBuilderBE.appendBytes(vararg v: Byte) = bab.appendBytes(*v)
-fun ByteArrayBuilderBE.appendBytes(vararg v: Int) = bab.appendBytes(*v)
-fun ByteArrayBuilderBE.appendShort(v: Int) = bab.appendShortBE(v)
-fun ByteArrayBuilderBE.append24Bits(v: Int) = bab.append24BitsBE(v)
-fun ByteArrayBuilderBE.appendInt(v: Int) = bab.appendIntBE(v)
-fun ByteArrayBuilderBE.appendHalfFloat(v: Float16) = bab.appendHalfFloatBE(v)
-fun ByteArrayBuilderBE.appendFloat(v: Float) = bab.appendFloatBE(v)
-fun ByteArrayBuilderBE.appendDouble(v: Double) = bab.appendDoubleBE(v)
+fun ByteArrayBuilderBE.append(vararg v: Byte) = bab.append(*v)
+fun ByteArrayBuilderBE.append(vararg v: Int) = bab.append(*v)
+fun ByteArrayBuilderBE.s8(v: Int) = bab.s8(v)
+fun ByteArrayBuilderBE.s16(v: Int) = bab.s16BE(v)
+fun ByteArrayBuilderBE.s24(v: Int) = bab.s24BE(v)
+fun ByteArrayBuilderBE.s32(v: Int) = bab.s32BE(v)
+fun ByteArrayBuilderBE.f16(v: Float16) = bab.f16BE(v)
+fun ByteArrayBuilderBE.f32(v: Float) = bab.f32BE(v)
+fun ByteArrayBuilderBE.f64(v: Double) = bab.f64BE(v)
 fun ByteArrayBuilderBE.clear() = bab.clear()
 fun ByteArrayBuilderBE.toByteArray(): ByteArray = bab.toByteArray()
 

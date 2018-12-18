@@ -9,8 +9,8 @@ class ByteArrayReaderTest {
         var n = 0
         buildByteArray {
             n += 1
-            appendFloatBE(1f)
-            appendFloatLE(2f)
+            f32BE(1f)
+            f32LE(2f)
         }.read {
             n += 2
             assertEquals(1f, f32BE())
@@ -24,8 +24,8 @@ class ByteArrayReaderTest {
         var n = 0
         buildByteArrayLE {
             n += 1
-            appendFloat(1f)
-            appendInt(7)
+            f32(1f)
+            s32(7)
         }.readLE {
             n += 2
             assertEquals(1f, f32())
@@ -39,8 +39,8 @@ class ByteArrayReaderTest {
         var n = 0
         buildByteArrayBE {
             n += 1
-            appendFloat(1f)
-            appendInt(7)
+            f32(1f)
+            s32(7)
         }.readBE {
             n += 2
             assertEquals(1f, f32())
