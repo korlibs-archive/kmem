@@ -27,4 +27,12 @@ class BitsTest {
 		assertEquals(data.readS16_be(0).toShort(), data.readS16_le(0).toShort().reverseBytes())
 		assertEquals(data.readU16_be(0).toShort(), data.readU16_le(0).toShort().reverseBytes())
 	}
+
+	@Test
+	fun clz() {
+		assertEquals(32, 0.countLeadingZeros())
+		for (n in 0 until 31) {
+			assertEquals(31 - n, (1 shl n).countLeadingZeros())
+		}
+	}
 }

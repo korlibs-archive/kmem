@@ -1,19 +1,20 @@
 package com.soywiz.kmem
 
-private inline fun ByteArray._read8(o: Int): Int = this[o].toInt()
-private fun ByteArray._u8(o: Int): Int = this[o].toInt() and 0xFF
+// @TODO: Rename methods!
 
-private inline fun ByteArray._read16_le(o: Int): Int = (_u8(o + 0) shl 0) or (_u8(o + 1) shl 8)
-private inline fun ByteArray._read24_le(o: Int): Int = (_u8(o + 0) shl 0) or (_u8(o + 1) shl 8) or (_u8(o + 2) shl 16)
-private inline fun ByteArray._read32_le(o: Int): Int = (_u8(o + 0) shl 0) or (_u8(o + 1) shl 8) or (_u8(o + 2) shl 16) or (_u8(o + 3) shl 24)
+private fun ByteArray.u8(o: Int): Int = this[o].toInt() and 0xFF
+
+private inline fun ByteArray._read16_le(o: Int): Int = (u8(o + 0) shl 0) or (u8(o + 1) shl 8)
+private inline fun ByteArray._read24_le(o: Int): Int = (u8(o + 0) shl 0) or (u8(o + 1) shl 8) or (u8(o + 2) shl 16)
+private inline fun ByteArray._read32_le(o: Int): Int = (u8(o + 0) shl 0) or (u8(o + 1) shl 8) or (u8(o + 2) shl 16) or (u8(o + 3) shl 24)
 private inline fun ByteArray._read64_le(o: Int): Long = (_read32_le(o + 0).unsigned shl 0) or (_read32_le(o + 4).unsigned shl 32)
-private inline fun ByteArray._read16_be(o: Int): Int = (_u8(o + 1) shl 0) or (_u8(o + 0) shl 8)
-private inline fun ByteArray._read24_be(o: Int): Int = (_u8(o + 2) shl 0) or (_u8(o + 1) shl 8) or (_u8(o + 0) shl 16)
-private inline fun ByteArray._read32_be(o: Int): Int = (_u8(o + 3) shl 0) or (_u8(o + 2) shl 8) or (_u8(o + 1) shl 16) or (_u8(o + 0) shl 24)
+private inline fun ByteArray._read16_be(o: Int): Int = (u8(o + 1) shl 0) or (u8(o + 0) shl 8)
+private inline fun ByteArray._read24_be(o: Int): Int = (u8(o + 2) shl 0) or (u8(o + 1) shl 8) or (u8(o + 0) shl 16)
+private inline fun ByteArray._read32_be(o: Int): Int = (u8(o + 3) shl 0) or (u8(o + 2) shl 8) or (u8(o + 1) shl 16) or (u8(o + 0) shl 24)
 private inline fun ByteArray._read64_be(o: Int): Long = (_read32_be(o + 4).unsigned shl 0) or (_read32_be(o + 0).unsigned shl 32)
 
 // Unsigned
-fun ByteArray.readU8(o: Int): Int = _u8(o)
+fun ByteArray.readU8(o: Int): Int = u8(o)
 fun ByteArray.readU16_le(o: Int): Int = _read16_le(o)
 fun ByteArray.readU24_le(o: Int): Int = _read24_le(o)
 fun ByteArray.readU32_le(o: Int): Long = _read32_le(o).unsigned
@@ -59,6 +60,8 @@ fun ByteArray.readLongArray_be(o: Int, count: Int): LongArray = this.readTypedAr
 fun ByteArray.readFloatArray_be(o: Int, count: Int): FloatArray = this.readTypedArray(o, count, 4, FloatArray(count)) { array, n, pos -> array[n] = readF32_be(pos) }
 fun ByteArray.readDoubleArray_be(o: Int, count: Int): DoubleArray = this.readTypedArray(o, count, 8, DoubleArray(count)) { array, n, pos -> array[n] = readF64_be(pos) }
 
+/////////////////////////////////////////
+/////////////////////////////////////////
 /////////////////////////////////////////
 
 

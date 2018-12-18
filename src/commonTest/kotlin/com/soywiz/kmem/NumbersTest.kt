@@ -1,12 +1,33 @@
-package com.soywiz.kmem.numeric
+package com.soywiz.kmem
 
-import com.soywiz.kmem.isPowerOfTwo
-import com.soywiz.kmem.nextPowerOfTwo
-import com.soywiz.kmem.prevPowerOfTwo
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-class PowerOfTwoTest {
+class NumbersTest {
+    @Test
+    fun testIlog2() {
+        for (n in 0 .. 30) {
+            assertEquals(n, ilog2(1 shl n))
+            if (n > 2) {
+                assertEquals(n, ilog2((1 shl n) + 1))
+            }
+        }
+    }
+
+    @Test
+    fun oddEven() {
+        assertTrue { 0.isEven }
+        assertTrue { !1.isEven }
+        assertTrue { 2.isEven }
+        assertTrue { !3.isEven }
+
+        assertTrue { !0.isOdd }
+        assertTrue { 1.isOdd }
+        assertTrue { !2.isOdd }
+        assertTrue { 3.isOdd }
+    }
+
     @Test
     fun isPowerOfTwo() {
         assertEquals(true, 0.isPowerOfTwo)
@@ -24,10 +45,7 @@ class PowerOfTwoTest {
             assertEquals(true, (1 shl n).isPowerOfTwo)
             if (n >= 2) assertEquals(false, ((1 shl n) + 1).isPowerOfTwo)
         }
-    }
 
-    @Test
-    fun nextPowerOfTwo() {
         assertEquals(0, 0.nextPowerOfTwo)
         assertEquals(1, 1.nextPowerOfTwo)
         assertEquals(2, 2.nextPowerOfTwo)
@@ -42,11 +60,7 @@ class PowerOfTwoTest {
         assertEquals(128, 65.nextPowerOfTwo)
         assertEquals(128, 127.nextPowerOfTwo)
         assertEquals(128, 128.nextPowerOfTwo)
-    }
 
-
-    @Test
-    fun prevPowerOfTwo() {
         assertEquals(0, 0.prevPowerOfTwo)
         assertEquals(1, 1.prevPowerOfTwo)
         assertEquals(2, 2.prevPowerOfTwo)

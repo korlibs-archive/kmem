@@ -116,10 +116,10 @@ object Generator {
 		line()
 
 		for ((t, at, v) in UNOPTIMIZED_ARRAYS) {
-			line("@PublishedApi expect internal fun $t _fill(array: $at, value: $v, start: Int, end: Int): Unit")
+			line("@PublishedApi internal expect fun $t _fill(array: $at, value: $v, start: Int, end: Int): Unit")
 		}
 		for (type in TYPES) type.apply {
-			line("@PublishedApi expect internal fun _fill(array: $karray, value: $prim, start: Int, end: Int): Unit")
+			line("@PublishedApi internal expect fun _fill(array: $karray, value: $prim, start: Int, end: Int): Unit")
 		}
 		line()
 
@@ -228,7 +228,7 @@ object Generator {
 		line()
 
 		for (type in TYPES) type.apply {
-			line("fun $jvmName.slice(offset: Int, size: Int): $jvmName = run { val out = this.duplicate(); (out as Buffer).position(this.position() + offset); (out as Buffer).limit(out.position() + size); return out }")
+			line("fun $jvmName.slice(offset: Int, size: Int): $jvmName = run { val out = this.duplicate(); (out as java.nio.Buffer).position(this.position() + offset); (out as java.nio.Buffer).limit(out.position() + size); return out }")
 		}
 
 		line("actual class MemBuffer(val buffer: ByteBuffer, val size: Int)")
@@ -254,8 +254,8 @@ object Generator {
 		for (type in TYPES) type.apply {
 			line("actual class $commonName(val mbuffer: MemBuffer, val jbuffer: $jvmName)")
 			line("actual val $commonName.mem: MemBuffer get() = mbuffer")
-			line("actual val $commonName.offset: Int get() = (jbuffer as Buffer).position()")
-			line("actual val $commonName.size: Int get() = (jbuffer as Buffer).limit()")
+			line("actual val $commonName.offset: Int get() = (jbuffer as java.nio.Buffer).position()")
+			line("actual val $commonName.size: Int get() = (jbuffer as java.nio.Buffer).limit()")
 			line("actual operator fun $commonName.get(index: Int): $prim = jbuffer.get(offset + index)")
 			line("actual operator fun $commonName.set(index: Int, value: $prim): Unit = run { jbuffer.put(offset + index, value) }")
 			line()

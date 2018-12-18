@@ -132,14 +132,14 @@ expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, 
 expect fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit
 expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit
 
-@PublishedApi expect internal fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit
-@PublishedApi expect internal fun  _fill(array: BooleanArray, value: Boolean, start: Int, end: Int): Unit
-@PublishedApi expect internal fun  _fill(array: LongArray, value: Long, start: Int, end: Int): Unit
-@PublishedApi expect internal fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit
-@PublishedApi expect internal fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit
-@PublishedApi expect internal fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit
-@PublishedApi expect internal fun _fill(array: FloatArray, value: Float, start: Int, end: Int): Unit
-@PublishedApi expect internal fun _fill(array: DoubleArray, value: Double, start: Int, end: Int): Unit
+@PublishedApi internal expect fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit
+@PublishedApi internal expect fun  _fill(array: BooleanArray, value: Boolean, start: Int, end: Int): Unit
+@PublishedApi internal expect fun  _fill(array: LongArray, value: Long, start: Int, end: Int): Unit
+@PublishedApi internal expect fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit
+@PublishedApi internal expect fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit
+@PublishedApi internal expect fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit
+@PublishedApi internal expect fun _fill(array: FloatArray, value: Float, start: Int, end: Int): Unit
+@PublishedApi internal expect fun _fill(array: DoubleArray, value: Double, start: Int, end: Int): Unit
 
 fun <T> Array<T>.fill(value: T, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
 fun  BooleanArray.fill(value: Boolean, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)

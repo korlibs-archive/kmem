@@ -10,3 +10,11 @@ fun UByteArrayInt(size: Int) = UByteArrayInt(ByteArray(size))
 
 fun ByteArray.asUByteArrayInt() = UByteArrayInt(this)
 fun UByteArrayInt.asByteArray() = this.bytes
+
+inline class FloatArrayFromIntArray(val base: IntArray) {
+    operator fun get(i: Int) = base[i].reinterpretAsFloat()
+    operator fun set(i: Int, v: Float) = run { base[i] = v.reinterpretAsInt() }
+}
+
+fun IntArray.asFloatArray(): FloatArrayFromIntArray = FloatArrayFromIntArray(this)
+fun FloatArrayFromIntArray.asIntArray(): IntArray = base

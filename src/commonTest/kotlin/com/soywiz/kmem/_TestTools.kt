@@ -4,7 +4,6 @@ import com.soywiz.kmem.internal.udiv
 import com.soywiz.kmem.internal.urem
 import kotlin.math.*
 
-
 private val formatRegex = Regex("%([-]?\\d+)?(\\w)")
 
 fun String.format(vararg params: Any): String {

@@ -2,7 +2,7 @@ package com.soywiz.kmem
 
 import kotlin.test.*
 
-class KmemTest {
+class BufferTest {
 	@Test
 	fun testBasicUsage() {
 		val data = MemBufferAlloc(16)
@@ -41,7 +41,7 @@ class KmemTest {
 		assertEquals(0x00000000, i32[3])
 		assertEquals(0x00000000, i32[4])
 
-		val fast = KmlNativeBuffer(i32.mem)
+		val fast = Buffer(i32.mem)
 
 		assertEquals(listOf(4, 3, 2, 1, 4, 3, 2, 1, 8, 7, 6, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), (0 until (10 * 4)).map { fast.i8[it].toInt() }.toList())
 
@@ -63,7 +63,7 @@ class KmemTest {
 
 	@Test
 	fun testKmlNativeBuffer() {
-		val mem = KmlNativeBuffer.alloc(10)
+		val mem = Buffer.alloc(10)
 		for (n in 0 until 8) mem[n] = n
 		assertEquals(0x03020100, mem.getAlignedInt32(0))
 		assertEquals(0x07060504, mem.getAlignedInt32(1))
