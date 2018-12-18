@@ -10,6 +10,12 @@ inline fun Int.reinterpretAsFloat() = Float.fromBits(this)
 inline fun Double.reinterpretAsLong() = this.toBits()
 inline fun Long.reinterpretAsDouble() = Double.fromBits(this)
 
+@UseExperimental(ExperimentalUnsignedTypes::class)
+fun UInt.rotateLeft(bits: Int): UInt = (this shl bits) or (this shr (32 - bits))
+
+@UseExperimental(ExperimentalUnsignedTypes::class)
+fun UInt.rotateRight(bits: Int): UInt = (this shl (32 - bits)) or (this shr bits)
+
 fun Int.rotateLeft(bits: Int): Int = (this shl bits) or (this ushr (32 - bits))
 fun Int.rotateRight(bits: Int): Int = (this shl (32 - bits)) or (this ushr bits)
 

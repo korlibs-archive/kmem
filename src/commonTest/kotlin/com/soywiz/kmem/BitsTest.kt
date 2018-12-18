@@ -30,6 +30,16 @@ class BitsTest {
 	}
 
 	@Test
+	fun rotate() {
+		val v = 0b10110111_01111011_11101111_11001000.toInt()
+		assertEquals(0b0110111_01111011_11101111_11001000_1.toInt(), v.rotateLeft(1))
+		assertEquals(0b0_10110111_01111011_11101111_1100100.toInt(), v.rotateRight(1))
+		assertEquals(0b110111_01111011_11101111_11001000_10.toInt(), v.rotateLeft(2))
+		assertEquals(0b00_10110111_01111011_11101111_110010.toInt(), v.rotateRight(2))
+	}
+
+
+	@Test
 	fun clz() {
 		assertEquals(32, 0.countLeadingZeros())
 		for (n in 0 until 31) {
@@ -65,5 +75,14 @@ class BitsTest {
 		for (n in 0 until 32) assertEquals(n, (1 shl n).reverseBits().countLeadingZeros())
 		for (n in 0 until 32) assertEquals(n, (0x173F52B1 shl n).reverseBits().countLeadingZeros())
 		for (n in 0 until 32) assertEquals(n, ((-1) shl n).reverseBits().countLeadingZeros())
+	}
+
+	@Test
+	fun reinterpret() {
+		assertEquals(0x3ff0000000000000L, 1.0.reinterpretAsLong())
+		assertEquals(1.0, 0x3ff0000000000000L.reinterpretAsDouble())
+
+		assertEquals(0x3f800000, 1f.reinterpretAsInt())
+		assertEquals(1f, 0x3f800000.reinterpretAsFloat())
 	}
 }

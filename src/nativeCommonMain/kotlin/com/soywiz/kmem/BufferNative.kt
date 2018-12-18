@@ -3,17 +3,24 @@
 @file:Suppress("NOTHING_TO_INLINE", "EXTENSION_SHADOWED_BY_MEMBER", "RedundantUnitReturnType", "FunctionName", "USELESS_CAST")
 package com.soywiz.kmem
 
+import com.soywiz.kmem.internal.*
+
 actual class MemBuffer(val data: ByteArray)
 actual fun MemBufferAlloc(size: Int): MemBuffer = MemBuffer(ByteArray(size))
 actual fun MemBufferAllocNoDirect(size: Int): MemBuffer = MemBuffer(ByteArray(size))
 actual fun MemBufferWrap(array: ByteArray): MemBuffer = MemBuffer(array)
 actual inline val MemBuffer.size: Int get() = data.size
 
-actual fun MemBuffer._sliceInt8Buffer(offset: Int, size: Int): Int8Buffer = Int8Buffer(this, offset * 1, size)
-actual fun MemBuffer._sliceInt16Buffer(offset: Int, size: Int): Int16Buffer = Int16Buffer(this, offset * 2, size)
-actual fun MemBuffer._sliceInt32Buffer(offset: Int, size: Int): Int32Buffer = Int32Buffer(this, offset * 4, size)
-actual fun MemBuffer._sliceFloat32Buffer(offset: Int, size: Int): Float32Buffer = Float32Buffer(this, offset * 4, size)
-actual fun MemBuffer._sliceFloat64Buffer(offset: Int, size: Int): Float64Buffer = Float64Buffer(this, offset * 8, size)
+actual fun MemBuffer._sliceInt8Buffer(offset: Int, size: Int): Int8Buffer =
+    Int8Buffer(this, offset * 1, size)
+actual fun MemBuffer._sliceInt16Buffer(offset: Int, size: Int): Int16Buffer =
+    Int16Buffer(this, offset * 2, size)
+actual fun MemBuffer._sliceInt32Buffer(offset: Int, size: Int): Int32Buffer =
+    Int32Buffer(this, offset * 4, size)
+actual fun MemBuffer._sliceFloat32Buffer(offset: Int, size: Int): Float32Buffer =
+    Float32Buffer(this, offset * 4, size)
+actual fun MemBuffer._sliceFloat64Buffer(offset: Int, size: Int): Float64Buffer =
+    Float64Buffer(this, offset * 8, size)
 
 actual typealias DataBuffer = MemBuffer
 actual val DataBuffer.mem: MemBuffer get() = this
@@ -102,11 +109,11 @@ actual operator fun Float64Buffer.set(index: Int, value: Double): Unit = mbuffer
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = arraycopy(src.data, srcPos, dst.data, dstPos, size)
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = arraycopy(src, srcPos, dst.data, dstPos, size)
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = arraycopy(src.data, srcPos, dst, dstPos, size)
-actual fun arraycopy(src: ShortArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst.setShort((dstPos + n) * 2, src[srcPos + n]) }
-actual fun arraycopy(src: IntArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst.setInt((dstPos + n) * 4, src[srcPos + n]) }
-actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst.setFloat((dstPos + n) * 4, src[srcPos + n]) }
-actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst.setDouble((dstPos + n) * 8, src[srcPos + n]) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst[dstPos + n] = src.getShort((srcPos + n) * 2) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst[dstPos + n] = src.getInt((srcPos + n) * 4) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst[dstPos + n] = src.getFloat((srcPos + n) * 4) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst[dstPos + n] = src.getDouble((srcPos + n) * 8) }
+actual fun arraycopy(src: ShortArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = arraycopyBase(src, srcPos, dst, dstPos, size) { s, d -> dst.setShort(d * 2, src[s]) }
+actual fun arraycopy(src: IntArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = arraycopyBase(src, srcPos, dst, dstPos, size) { s, d -> dst.setInt(d * 4, src[s]) }
+actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = arraycopyBase(src, srcPos, dst, dstPos, size) { s, d -> dst.setFloat(d * 4, src[s]) }
+actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = arraycopyBase(src, srcPos, dst, dstPos, size) { s, d -> dst.setDouble(d * 8, src[s]) }
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = arraycopyBase(src, srcPos, dst, dstPos, size) { s, d -> dst[d] = src.getShort(s * 2) }
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = arraycopyBase(src, srcPos, dst, dstPos, size) { s, d -> dst[d] = src.getInt(s * 4) }
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = arraycopyBase(src, srcPos, dst, dstPos, size) { s, d -> dst[d] = src.getFloat(s * 4) }
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = arraycopyBase(src, srcPos, dst, dstPos, size) { s, d -> dst[d] = src.getDouble(s * 8) }
