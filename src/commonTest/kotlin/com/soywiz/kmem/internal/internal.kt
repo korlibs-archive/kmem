@@ -34,3 +34,7 @@ internal fun String.format(vararg params: Any): String {
 
 internal fun Int.toStringUnsigned(radix: Int): String = this.toUInt().toString(radix)
 internal fun Long.toStringUnsigned(radix: Int): String = this.toLong().toString(radix)
+
+fun byteArrayOf(vararg values: Int): ByteArray = ByteArray(values.size).also {
+    for (n in 0 until values.size) it[n] = values[n].toByte()
+}
