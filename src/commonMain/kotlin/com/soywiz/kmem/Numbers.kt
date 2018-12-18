@@ -2,13 +2,58 @@ package com.soywiz.kmem
 
 import kotlin.math.*
 
-inline val Byte.unsigned get() = this.toInt() and 0xFF
-inline val Int.unsigned get() = this.toLong() and 0xFFFFFFFFL
+////////////////////
+////////////////////
 
 inline fun Boolean.toInt() = if (this) 1 else 0
 
+////////////////////
+////////////////////
+
+fun Float.toIntCeil() = ceil(this).toInt()
+fun Float.toIntFloor() = floor(this).toInt()
+fun Float.toIntRound() = round(this).toLong().toInt()
+
+fun Double.toIntCeil() = ceil(this).toInt()
+fun Double.toIntFloor() = floor(this).toInt()
+fun Double.toIntRound() = round(this).toLong().toInt()
+
+fun Long.toIntSafe(): Int {
+    if (this.toInt().toLong() != this) throw IllegalArgumentException("Long doesn't fit Integer")
+    return this.toInt()
+}
+
+////////////////////
+////////////////////
+
 fun rint(v: Double): Double = if (v >= floor(v) + 0.5) ceil(v) else round(v)  // @TODO: Is this right?
 fun signum(v: Double): Double = sign(v)
+
+////////////////////
+////////////////////
+
+inline val Byte.unsigned get() = this.toInt() and 0xFF
+inline val Int.unsigned get() = this.toLong() and 0xFFFFFFFFL
+
+////////////////////
+////////////////////
+
+fun ilog2(v: Int): Int = if (v == 0) (-1) else (31 - v.countLeadingZeros())
+
+////////////////////
+////////////////////
+
+infix fun Int.divCeil(that: Int): Int = if (this % that != 0) (this / that) + 1 else (this / that)
+
+////////////////////
+////////////////////
+
+fun Double.convertRange(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = (dstMin + (dstMax - dstMin) * ((this - srcMin) / (srcMax - srcMin)))
+fun Double.convertRangeClamped(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
+fun Long.convertRange(srcMin: Long, srcMax: Long, dstMin: Long, dstMax: Long): Long = (dstMin + (dstMax - dstMin) * ((this - srcMin).toDouble() / (srcMax - srcMin).toDouble())).toLong()
+
+////////////////////
+////////////////////
 
 fun Float.isAlmostZero(): Boolean = abs(this) <= 1e-19
 fun Float.isNanOrInfinite() = this.isNaN() || this.isInfinite()
@@ -16,7 +61,8 @@ fun Float.isNanOrInfinite() = this.isNaN() || this.isInfinite()
 fun Double.isAlmostZero(): Boolean = abs(this) <= 1e-19
 fun Double.isNanOrInfinite() = this.isNaN() || this.isInfinite()
 
-infix fun Int.divCeil(that: Int): Int = if (this % that != 0) (this / that) + 1 else (this / that)
+////////////////////
+////////////////////
 
 infix fun Int.umod(other: Int): Int {
     val remainder = this % other
@@ -34,20 +80,6 @@ infix fun Double.umod(other: Double): Double {
     }
 }
 
-fun ilog2(v: Int): Int = if (v == 0) (-1) else (31 - v.countLeadingZeros())
-
-fun Double.toIntCeil() = ceil(this).toInt()
-fun Double.toIntFloor() = floor(this).toInt()
-fun Double.toIntRound() = round(this).toLong().toInt()
-
-fun Double.convertRange(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = (dstMin + (dstMax - dstMin) * ((this - srcMin) / (srcMax - srcMin)))
-fun Double.convertRangeClamped(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
-fun Long.convertRange(srcMin: Long, srcMax: Long, dstMin: Long, dstMax: Long): Long = (dstMin + (dstMax - dstMin) * ((this - srcMin).toDouble() / (srcMax - srcMin).toDouble())).toLong()
-
-fun Long.toIntSafe(): Int {
-    if (this.toInt().toLong() != this) throw IllegalArgumentException("Long doesn't fit Integer")
-    return this.toInt()
-}
 
 ////////////////////
 ////////////////////

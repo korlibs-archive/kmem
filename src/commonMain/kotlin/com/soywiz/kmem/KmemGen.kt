@@ -111,15 +111,6 @@ fun arraycopy(src: Float64Buffer, srcPos: Int, dst: Float64Buffer, dstPos: Int, 
 fun arraycopy(src: DoubleArray, srcPos: Int, dst: Float64Buffer, dstPos: Int, size: Int): Unit = arraycopy(src, srcPos, dst.mem, dstPos, size)
 fun arraycopy(src: Float64Buffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = arraycopy(src.mem, srcPos, dst, dstPos, size)
 
-expect fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit
-expect fun  arraycopy(src: BooleanArray, srcPos: Int, dst: BooleanArray, dstPos: Int, size: Int): Unit
-expect fun  arraycopy(src: LongArray, srcPos: Int, dst: LongArray, dstPos: Int, size: Int): Unit
-expect fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit
-expect fun arraycopy(src: ShortArray, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit
-expect fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit
-expect fun arraycopy(src: FloatArray, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit
-expect fun arraycopy(src: DoubleArray, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit
-
 expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit
 expect fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit
 expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit
@@ -132,32 +123,6 @@ expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, 
 expect fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit
 expect fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit
 
-@PublishedApi internal expect fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit
-@PublishedApi internal expect fun  _fill(array: BooleanArray, value: Boolean, start: Int, end: Int): Unit
-@PublishedApi internal expect fun  _fill(array: LongArray, value: Long, start: Int, end: Int): Unit
-@PublishedApi internal expect fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit
-@PublishedApi internal expect fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit
-@PublishedApi internal expect fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit
-@PublishedApi internal expect fun _fill(array: FloatArray, value: Float, start: Int, end: Int): Unit
-@PublishedApi internal expect fun _fill(array: DoubleArray, value: Double, start: Int, end: Int): Unit
-
-fun <T> Array<T>.fill(value: T, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
-fun  BooleanArray.fill(value: Boolean, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
-fun  LongArray.fill(value: Long, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
-inline fun ByteArray.fill(value: Byte, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
-inline fun ShortArray.fill(value: Short, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
-inline fun IntArray.fill(value: Int, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
-inline fun FloatArray.fill(value: Float, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
-inline fun DoubleArray.fill(value: Double, start: Int = 0, end: Int = this.size): Unit = _fill(this, value, start, end)
-
-const val Float64Buffer_BYTES_PER_ELEMENT = 8
-const val Float32Buffer_BYTES_PER_ELEMENT = 4
-const val Int32Buffer_BYTES_PER_ELEMENT = 4
-const val Int16Buffer_BYTES_PER_ELEMENT = 2
-const val Int8Buffer_BYTES_PER_ELEMENT = 2
-
-const val Uint8Buffer_BYTES_PER_ELEMENT = 1
-const val Uint16Buffer_BYTES_PER_ELEMENT = 2
 
 fun NewUint8Buffer(mem: MemBuffer, offset: Int, len: Int) = mem.sliceUint8Buffer(offset, len)
 fun NewUint16Buffer(mem: MemBuffer, offset: Int, len: Int) = mem.sliceUint16Buffer(offset, len)

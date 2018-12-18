@@ -76,33 +76,6 @@ inline fun FloatArray.asTyped(): Float32Array = this.unsafeCast<Float32Array>()
 inline fun DoubleArray.asFloat64Array(): Float64Array = this.unsafeCast<Float64Array>()
 inline fun DoubleArray.asTyped(): Float64Array = this.unsafeCast<Float64Array>()
 
-actual fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit {
-	if ((src === dst) && (srcPos >= dstPos)) {
-		for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-	} else {
-		for (n in size - 1 downTo 0) dst[dstPos + n] = src[srcPos + n]
-	}
-}
-actual fun  arraycopy(src: BooleanArray, srcPos: Int, dst: BooleanArray, dstPos: Int, size: Int): Unit {
-	if ((src === dst) && (srcPos >= dstPos)) {
-		for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-	} else {
-		for (n in size - 1 downTo 0) dst[dstPos + n] = src[srcPos + n]
-	}
-}
-actual fun  arraycopy(src: LongArray, srcPos: Int, dst: LongArray, dstPos: Int, size: Int): Unit {
-	if ((src === dst) && (srcPos >= dstPos)) {
-		for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-	} else {
-		for (n in size - 1 downTo 0) dst[dstPos + n] = src[srcPos + n]
-	}
-}
-actual fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-actual fun arraycopy(src: ShortArray, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-actual fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-actual fun arraycopy(src: FloatArray, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
-
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Int8Array(dst, dstPos).set(Int8Array(src, srcPos, size), 0)
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Int8Array(dst).set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src._sliceInt8Buffer(0, src.size / 1).subarray(srcPos, srcPos + size), dstPos)
@@ -114,12 +87,3 @@ actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src._sliceFloat32Buffer(0, src.size / 4).subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = Float64Array(dst).set(src.asTyped().subarray(srcPos, srcPos + size), dstPos)
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = dst.asTyped().set(src._sliceFloat64Buffer(0, src.size / 8).subarray(srcPos, srcPos + size), dstPos)
-
-@PublishedApi internal actual fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi internal actual fun  _fill(array: BooleanArray, value: Boolean, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi internal actual fun  _fill(array: LongArray, value: Long, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi actual inline internal fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
-@PublishedApi actual inline internal fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
-@PublishedApi actual inline internal fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
-@PublishedApi actual inline internal fun _fill(array: FloatArray, value: Float, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }
-@PublishedApi actual inline internal fun _fill(array: DoubleArray, value: Double, start: Int, end: Int): Unit = run { array.asDynamic().fill(value, start, end) }

@@ -99,78 +99,6 @@ actual val Float64Buffer.size: Int get() = MSIZE
 actual operator fun Float64Buffer.get(index: Int): Double = mbuffer.getDouble(getByteIndex(index))
 actual operator fun Float64Buffer.set(index: Int, value: Double): Unit = mbuffer.setDouble(getByteIndex(index), value)
 
-actual fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit {
-    if (src === dst && dstPos > srcPos) { // overlapping
-        var n = size
-        while (--n >= 0) dst[dstPos + n] = src[srcPos + n]
-    } else {
-        for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-    }
-}
-
-actual fun  arraycopy(src: BooleanArray, srcPos: Int, dst: BooleanArray, dstPos: Int, size: Int): Unit {
-    if (src === dst && dstPos > srcPos) { // overlapping
-        var n = size
-        while (--n >= 0) dst[dstPos + n] = src[srcPos + n]
-    } else {
-        for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-    }
-}
-
-actual fun  arraycopy(src: LongArray, srcPos: Int, dst: LongArray, dstPos: Int, size: Int): Unit {
-    if (src === dst && dstPos > srcPos) { // overlapping
-        var n = size
-        while (--n >= 0) dst[dstPos + n] = src[srcPos + n]
-    } else {
-        for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-    }
-}
-
-actual fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit {
-    if (src === dst && dstPos > srcPos) { // overlapping
-        var n = size
-        while (--n >= 0) dst[dstPos + n] = src[srcPos + n]
-    } else {
-        for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-    }
-}
-
-actual fun arraycopy(src: ShortArray, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit {
-    if (src === dst && dstPos > srcPos) { // overlapping
-        var n = size
-        while (--n >= 0) dst[dstPos + n] = src[srcPos + n]
-    } else {
-        for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-    }
-}
-
-actual fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit {
-    if (src === dst && dstPos > srcPos) { // overlapping
-        var n = size
-        while (--n >= 0) dst[dstPos + n] = src[srcPos + n]
-    } else {
-        for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-    }
-}
-
-actual fun arraycopy(src: FloatArray, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit {
-    if (src === dst && dstPos > srcPos) { // overlapping
-        var n = size
-        while (--n >= 0) dst[dstPos + n] = src[srcPos + n]
-    } else {
-        for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-    }
-}
-
-actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit {
-    if (src === dst && dstPos > srcPos) { // overlapping
-        var n = size
-        while (--n >= 0) dst[dstPos + n] = src[srcPos + n]
-    } else {
-        for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
-    }
-}
-
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = arraycopy(src.data, srcPos, dst.data, dstPos, size)
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = arraycopy(src, srcPos, dst.data, dstPos, size)
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = arraycopy(src.data, srcPos, dst, dstPos, size)
@@ -182,12 +110,3 @@ actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst[dstPos + n] = src.getInt((srcPos + n) * 4) }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst[dstPos + n] = src.getFloat((srcPos + n) * 4) }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = run { for (n in 0 until size) dst[dstPos + n] = src.getDouble((srcPos + n) * 8) }
-
-@PublishedApi internal actual fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi internal actual fun  _fill(array: BooleanArray, value: Boolean, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi internal actual fun  _fill(array: LongArray, value: Long, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi internal actual fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi internal actual fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi internal actual fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi internal actual fun _fill(array: FloatArray, value: Float, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }
-@PublishedApi internal actual fun _fill(array: DoubleArray, value: Double, start: Int, end: Int): Unit = run { for (n in start until end) array[n] = value }

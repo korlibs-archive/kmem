@@ -83,15 +83,6 @@ actual val Float64Buffer.size: Int get() = (jbuffer as java.nio.Buffer).limit() 
 actual operator fun Float64Buffer.get(index: Int): Double = jbuffer.get(offset + index)
 actual operator fun Float64Buffer.set(index: Int, value: Double): Unit = run { jbuffer.put(offset + index, value) }
 
-actual fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
-actual fun  arraycopy(src: BooleanArray, srcPos: Int, dst: BooleanArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
-actual fun  arraycopy(src: LongArray, srcPos: Int, dst: LongArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
-actual fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
-actual fun arraycopy(src: ShortArray, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
-actual fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
-actual fun arraycopy(src: FloatArray, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
-actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = System.arraycopy(src, srcPos, dst, dstPos, size)
-
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { dst.buffer.slice(dstPos, size).put(src.buffer.slice(srcPos, size)) }
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceInt8Buffer(dstPos, size) as Int8Buffer).jbuffer.put(src, srcPos, size) }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = run { (src.sliceInt8Buffer(srcPos, size) as Int8Buffer).jbuffer.get(dst, dstPos, size) }
@@ -103,12 +94,3 @@ actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = run { (src.sliceFloat32Buffer(srcPos, size) as Float32Buffer).jbuffer.get(dst, dstPos, size) }
 actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceFloat64Buffer(dstPos, size) as Float64Buffer).jbuffer.put(src, srcPos, size) }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = run { (src.sliceFloat64Buffer(srcPos, size) as Float64Buffer).jbuffer.get(dst, dstPos, size) }
-
-@PublishedApi internal actual fun <T> _fill(array: Array<T>, value: T, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
-@PublishedApi internal actual fun  _fill(array: BooleanArray, value: Boolean, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
-@PublishedApi internal actual fun  _fill(array: LongArray, value: Long, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
-@PublishedApi internal actual fun _fill(array: ByteArray, value: Byte, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
-@PublishedApi internal actual fun _fill(array: ShortArray, value: Short, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
-@PublishedApi internal actual fun _fill(array: IntArray, value: Int, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
-@PublishedApi internal actual fun _fill(array: FloatArray, value: Float, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
-@PublishedApi internal actual fun _fill(array: DoubleArray, value: Double, start: Int, end: Int): Unit = Arrays.fill(array, start, end, value)
