@@ -2,11 +2,20 @@ package com.soywiz.kmem
 
 import kotlin.math.max
 
-class ByteArrayBuilder private constructor(var data: ByteArray, size: Int = data.size, val allowGrow: Boolean = true) {
+class ByteArrayBuilder(var data: ByteArray, size: Int = data.size, val allowGrow: Boolean = true) {
     constructor(initialCapacity: Int = 4096) : this(ByteArray(initialCapacity), 0)
 
     private var _size: Int = size
-    val size: Int get() = _size
+    var size: Int get() = _size
+        set(value) {
+            val oldPosition = _size
+            val newPosition = value
+            ensure(newPosition)
+            _size = newPosition
+            if (newPosition > oldPosition) {
+                arrayfill(data, 0, oldPosition, newPosition)
+            }
+        }
 
     private fun ensure(expected: Int) {
         if (data.size < expected) {

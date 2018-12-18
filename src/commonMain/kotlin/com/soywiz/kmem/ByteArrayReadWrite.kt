@@ -72,6 +72,13 @@ fun ByteArray.readLongArrayBE(o: Int, count: Int): LongArray = this.readTypedArr
 fun ByteArray.readFloatArrayBE(o: Int, count: Int): FloatArray = this.readTypedArray(o, count, 4, FloatArray(count)) { array, n, pos -> array[n] = readF32BE(pos) }
 fun ByteArray.readDoubleArrayBE(o: Int, count: Int): DoubleArray = this.readTypedArray(o, count, 8, DoubleArray(count)) { array, n, pos -> array[n] = readF64BE(pos) }
 
+fun ByteArray.readShortArray(o: Int, count: Int, little: Boolean): ShortArray = if (little) readShortArrayLE(o, count) else readShortArrayBE(o, count)
+fun ByteArray.readCharArray(o: Int, count: Int, little: Boolean): CharArray = if (little) readCharArrayLE(o, count) else readCharArrayBE(o, count)
+fun ByteArray.readIntArray(o: Int, count: Int, little: Boolean): IntArray = if (little) readIntArrayLE(o, count) else readIntArrayBE(o, count)
+fun ByteArray.readLongArray(o: Int, count: Int, little: Boolean): LongArray = if (little) readLongArrayLE(o, count) else readLongArrayBE(o, count)
+fun ByteArray.readFloatArray(o: Int, count: Int, little: Boolean): FloatArray = if (little) readFloatArrayLE(o, count) else readFloatArrayBE(o, count)
+fun ByteArray.readDoubleArray(o: Int, count: Int, little: Boolean): DoubleArray = if (little) readDoubleArrayLE(o, count) else readDoubleArrayBE(o, count)
+
 /////////////////////////////////////////
 /////////////////////////////////////////
 /////////////////////////////////////////
