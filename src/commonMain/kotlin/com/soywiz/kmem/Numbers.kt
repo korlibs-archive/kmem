@@ -18,16 +18,7 @@ fun Double.toIntCeil() = ceil(this).toInt()
 fun Double.toIntFloor() = floor(this).toInt()
 fun Double.toIntRound() = round(this).toLong().toInt()
 
-fun Long.toIntSafe(): Int {
-    if (this.toInt().toLong() != this) throw IllegalArgumentException("Long doesn't fit Integer")
-    return this.toInt()
-}
-
-////////////////////
-////////////////////
-
-fun rint(v: Double): Double = if (v >= floor(v) + 0.5) ceil(v) else round(v)  // @TODO: Is this right?
-fun signum(v: Double): Double = sign(v)
+fun Long.toIntSafe(): Int = if (this in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) this.toInt() else throw IllegalArgumentException("Long doesn't fit Integer")
 
 ////////////////////
 ////////////////////
@@ -43,14 +34,19 @@ fun ilog2(v: Int): Int = if (v == 0) (-1) else (31 - v.countLeadingZeros())
 ////////////////////
 ////////////////////
 
+infix fun Int.divFloor(that: Int): Int = this / that
 infix fun Int.divCeil(that: Int): Int = if (this % that != 0) (this / that) + 1 else (this / that)
 
 ////////////////////
 ////////////////////
 
 fun Double.convertRange(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = (dstMin + (dstMax - dstMin) * ((this - srcMin) / (srcMax - srcMin)))
-fun Double.convertRangeClamped(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
+fun Int.convertRange(srcMin: Int, srcMax: Int, dstMin: Int, dstMax: Int): Int = (dstMin + (dstMax - dstMin) * ((this - srcMin).toDouble() / (srcMax - srcMin).toDouble())).toInt()
 fun Long.convertRange(srcMin: Long, srcMax: Long, dstMin: Long, dstMax: Long): Long = (dstMin + (dstMax - dstMin) * ((this - srcMin).toDouble() / (srcMax - srcMin).toDouble())).toLong()
+
+fun Double.convertRangeClamped(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
+fun Int.convertRangeClamped(srcMin: Int, srcMax: Int, dstMin: Int, dstMax: Int): Int = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
+fun Long.convertRangeClamped(srcMin: Long, srcMax: Long, dstMin: Long, dstMax: Long): Long = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
 
 ////////////////////
 ////////////////////
@@ -73,7 +69,8 @@ infix fun Int.umod(other: Int): Int {
 }
 
 infix fun Double.umod(other: Double): Double {
-    val remainder = this % other
+    val rm = this % other
+    val remainder = if (rm == -0.0) 0.0 else rm
     return when {
         remainder < 0 -> remainder + other
         else -> remainder
@@ -101,7 +98,8 @@ fun Long.clamp(min: Long, max: Long): Long = if (this < min) min else if (this >
 fun Double.clamp(min: Double, max: Double): Double = if (this < min) min else if (this > max) max else this
 fun Float.clamp(min: Float, max: Float): Float = if ((this < min)) min else if ((this > max)) max else this
 
-fun Double.clamp01() = clamp(0.0, 1.0)
+fun Double.clamp01(): Double = clamp(0.0, 1.0)
+fun Float.clamp01(): Float = clamp(0f, 1f)
 
 fun Long.toIntClamp(min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE): Int {
     if (this < min) return min

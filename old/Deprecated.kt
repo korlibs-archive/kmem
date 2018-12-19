@@ -105,3 +105,10 @@ fun arraycopyAny(src: Any, srcPos: Int, dst: Any, dstPos: Int, size: Int): Unit 
         else -> error("Not a valid array $src")
     }
 }
+
+////////////////////
+////////////////////
+
+fun rint(v: Double): Double = if (v >= floor(v) + 0.5) ceil(v) else round(v)  // @TODO: Is this right?
+fun signum(v: Double): Double = sign(v)
+

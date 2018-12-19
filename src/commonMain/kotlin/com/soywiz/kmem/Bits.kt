@@ -79,8 +79,8 @@ fun Long.signExtend(bits: Int): Long = (this shl (64 - bits)) shr (64 - bits) //
 fun Int.mask(): Int = (1 shl this) - 1
 fun Long.mask(): Long = (1L shl this.toInt()) - 1L
 
-fun Int.getBit(offset: Int): Boolean = ((this ushr offset) and 1) != 0
-fun Int.getBits(offset: Int, count: Int): Int = (this ushr offset) and count.mask()
+//fun Int.getBit(offset: Int): Boolean = ((this ushr offset) and 1) != 0
+//fun Int.getBits(offset: Int, count: Int): Int = (this ushr offset) and count.mask()
 
 fun Int.extract(offset: Int, count: Int): Int = (this ushr offset) and count.mask()
 fun Int.extract(offset: Int): Boolean = ((this ushr offset) and 1) != 0
@@ -115,26 +115,7 @@ fun Int.insertScaled(value: Int, offset: Int, count: Int, scale: Int): Int =
 fun Int.insertScaledFF(value: Int, offset: Int, count: Int): Int =
     if (count == 0) this else this.insertScaled(value, offset, count, 0xFF)
 
-fun Int.extractBool(offset: Int) = this.extract(offset, 1) != 0
+fun Int.extractBool(offset: Int) = this.extract(offset)
 
-infix fun Int.hasFlag(bits: Int) = (this and bits) == bits
-
-// Experimental Byte extensions
-
-infix fun Byte.and(mask: Long): Long = this.toLong() and mask
-
-infix fun Byte.and(mask: Int): Int = this.toInt() and mask
-infix fun Short.and(mask: Int): Int = this.toInt() and mask
-
-infix fun Byte.or(mask: Int): Int = this.toInt() or mask
-infix fun Short.or(mask: Int): Int = this.toInt() or mask
-infix fun Short.or(mask: Short): Int = this.toInt() or mask.toInt()
-
-infix fun Byte.shl(that: Int): Int = this.toInt() shl that
-infix fun Short.shl(that: Int): Int = this.toInt() shl that
-
-infix fun Byte.shr(that: Int): Int = this.toInt() shr that
-infix fun Short.shr(that: Int): Int = this.toInt() shr that
-
-infix fun Byte.ushr(that: Int): Int = this.toInt() ushr that
-infix fun Short.ushr(that: Int): Int = this.toInt() ushr that
+//infix fun Int.hasFlag(bits: Int) = (this and bits) == bits
+infix fun Int.hasFlags(bits: Int) = (this and bits) == bits
