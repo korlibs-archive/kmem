@@ -62,7 +62,7 @@ class FBufferTest {
 	}
 
 	@Test
-	fun testKmlNativeBuffer() {
+	fun testFBuffer() {
 		val mem = FBuffer.alloc(10)
 		for (n in 0 until 8) mem[n] = n
 		assertEquals(0x03020100, mem.getAlignedInt32(0))
