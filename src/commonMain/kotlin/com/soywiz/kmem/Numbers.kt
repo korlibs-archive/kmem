@@ -61,7 +61,8 @@ fun Double.isNanOrInfinite() = this.isNaN() || this.isInfinite()
 ////////////////////
 
 infix fun Int.umod(other: Int): Int {
-    val remainder = this % other
+    val rm = this % other
+    val remainder = if (rm == -0) 0 else rm
     return when {
         remainder < 0 -> remainder + other
         else -> remainder
