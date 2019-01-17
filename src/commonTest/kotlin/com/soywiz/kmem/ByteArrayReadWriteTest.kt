@@ -21,4 +21,10 @@ class ByteArrayReadWriteTest {
         assertEquals(0x914533, byteArrayOf(-1, 0x91, 0x45, 0x33).readU24BE(1))
         assertEquals(0x914533, byteArrayOf(-1, 0x91, 0x45, 0x33).readU24(1, little = false))
     }
+
+    @Test
+    fun test2() {
+        assertEquals("000123456789abcdef", ByteArray(9).apply { write64BE(1, 0x0123456789ABCDEFL) }.hex)
+        assertEquals("00efcdab8967452301", ByteArray(9).apply { write64LE(1, 0x0123456789ABCDEFL) }.hex)
+    }
 }

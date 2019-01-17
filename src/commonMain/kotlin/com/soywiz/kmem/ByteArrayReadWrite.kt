@@ -107,7 +107,7 @@ fun ByteArray.write16BE(o: Int, v: Int) = run { this[o + 1] = v.extractByte(0); 
 fun ByteArray.write24BE(o: Int, v: Int) = run { this[o + 2] = v.extractByte(0); this[o + 1] = v.extractByte(8); this[o + 0] = v.extractByte(16) }
 fun ByteArray.write32BE(o: Int, v: Int) = run { this[o + 3] = v.extractByte(0); this[o + 2] = v.extractByte(8); this[o + 1] = v.extractByte(16); this[o + 0] = v.extractByte(24) }
 fun ByteArray.write32BE(o: Int, v: Long) = write32BE(o, v.toInt())
-fun ByteArray.write64BE(o: Int, v: Long) = run { write32LE(o + 0, (v ushr 32).toInt()); write32LE(o + 4, (v ushr 0).toInt()) }
+fun ByteArray.write64BE(o: Int, v: Long) = run { write32BE(o + 0, (v ushr 32).toInt()); write32BE(o + 4, (v ushr 0).toInt()) }
 fun ByteArray.writeF16BE(o: Int, v: Float16) = run { write16BE(o + 0, v.toRawBits().toInt()) }
 fun ByteArray.writeF32BE(o: Int, v: Float) = run { write32BE(o + 0, v.toRawBits()) }
 fun ByteArray.writeF64BE(o: Int, v: Double) = run { write64BE(o + 0, v.toRawBits()) }
