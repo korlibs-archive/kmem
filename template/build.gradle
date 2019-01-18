@@ -2,6 +2,7 @@ apply plugin: 'kotlin'
 
 repositories {
     mavenLocal()
+    maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
     jcenter()
 }
 
