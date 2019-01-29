@@ -40,13 +40,14 @@ actual class Int8Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size: I
     companion object {
         const val SIZE = 1
     }
-    val MOFFSET = byteOffset / SIZE
-    val MSIZE = size / SIZE
+    val MEM_OFFSET = byteOffset / SIZE
+    //val MSIZE = size / SIZE // @TODO: Caused problems with Kotlin/Native because: #define	MSIZE		(1 << MSIZESHIFT) in param.h
+    val MEM_SIZE = size / SIZE
     fun getByteIndex(index: Int) = byteOffset + index * SIZE
 }
 actual val Int8Buffer.mem: MemBuffer get() = mbuffer
-actual val Int8Buffer.offset: Int get() = MOFFSET
-actual val Int8Buffer.size: Int get() = MSIZE
+actual val Int8Buffer.offset: Int get() = MEM_OFFSET
+actual val Int8Buffer.size: Int get() = MEM_SIZE
 actual operator fun Int8Buffer.get(index: Int): Byte = mbuffer.getByte(getByteIndex(index))
 actual operator fun Int8Buffer.set(index: Int, value: Byte): Unit = mbuffer.setByte(getByteIndex(index), value)
 
@@ -54,13 +55,13 @@ actual class Int16Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size: 
     companion object {
         const val SIZE = 2
     }
-    val MOFFSET = byteOffset / SIZE
-    val MSIZE = size / SIZE
+    val MEM_OFFSET = byteOffset / SIZE
+    val MEM_SIZE = size / SIZE
     fun getByteIndex(index: Int) = byteOffset + index * SIZE
 }
 actual val Int16Buffer.mem: MemBuffer get() = mbuffer
-actual val Int16Buffer.offset: Int get() = MOFFSET
-actual val Int16Buffer.size: Int get() = MSIZE
+actual val Int16Buffer.offset: Int get() = MEM_OFFSET
+actual val Int16Buffer.size: Int get() = MEM_SIZE
 actual operator fun Int16Buffer.get(index: Int): Short = mbuffer.getShort(getByteIndex(index))
 actual operator fun Int16Buffer.set(index: Int, value: Short): Unit = mbuffer.setShort(getByteIndex(index), value)
 
@@ -68,13 +69,13 @@ actual class Int32Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size: 
     companion object {
         const val SIZE = 4
     }
-    val MOFFSET = byteOffset / SIZE
-    val MSIZE = size / SIZE
+    val MEM_OFFSET = byteOffset / SIZE
+    val MEM_SIZE = size / SIZE
     fun getByteIndex(index: Int) = byteOffset + index * SIZE
 }
 actual val Int32Buffer.mem: MemBuffer get() = mbuffer
-actual val Int32Buffer.offset: Int get() = MOFFSET
-actual val Int32Buffer.size: Int get() = MSIZE
+actual val Int32Buffer.offset: Int get() = MEM_OFFSET
+actual val Int32Buffer.size: Int get() = MEM_SIZE
 actual operator fun Int32Buffer.get(index: Int): Int = mbuffer.getInt(getByteIndex(index))
 actual operator fun Int32Buffer.set(index: Int, value: Int): Unit = mbuffer.setInt(getByteIndex(index), value)
 
@@ -82,13 +83,13 @@ actual class Float32Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size
     companion object {
         const val SIZE = 4
     }
-    val MOFFSET = byteOffset / SIZE
-    val MSIZE = size / SIZE
+    val MEM_OFFSET = byteOffset / SIZE
+    val MEM_SIZE = size / SIZE
     fun getByteIndex(index: Int) = byteOffset + index * SIZE
 }
 actual val Float32Buffer.mem: MemBuffer get() = mbuffer
-actual val Float32Buffer.offset: Int get() = MOFFSET
-actual val Float32Buffer.size: Int get() = MSIZE
+actual val Float32Buffer.offset: Int get() = MEM_OFFSET
+actual val Float32Buffer.size: Int get() = MEM_SIZE
 actual operator fun Float32Buffer.get(index: Int): Float = mbuffer.getFloat(getByteIndex(index))
 actual operator fun Float32Buffer.set(index: Int, value: Float): Unit = mbuffer.setFloat(getByteIndex(index), value)
 
@@ -96,13 +97,13 @@ actual class Float64Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size
     companion object {
         const val SIZE = 8
     }
-    val MOFFSET = byteOffset / SIZE
-    val MSIZE = size / SIZE
+    val MEM_OFFSET = byteOffset / SIZE
+    val MEM_SIZE = size / SIZE
     fun getByteIndex(index: Int) = byteOffset + index * SIZE
 }
 actual val Float64Buffer.mem: MemBuffer get() = mbuffer
-actual val Float64Buffer.offset: Int get() = MOFFSET
-actual val Float64Buffer.size: Int get() = MSIZE
+actual val Float64Buffer.offset: Int get() = MEM_OFFSET
+actual val Float64Buffer.size: Int get() = MEM_SIZE
 actual operator fun Float64Buffer.get(index: Int): Double = mbuffer.getDouble(getByteIndex(index))
 actual operator fun Float64Buffer.set(index: Int, value: Double): Unit = mbuffer.setDouble(getByteIndex(index), value)
 
