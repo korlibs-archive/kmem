@@ -85,4 +85,14 @@ class BitsTest {
 		assertEquals(0x3f800000, 1f.reinterpretAsInt())
 		assertEquals(1f, 0x3f800000.reinterpretAsFloat())
 	}
+
+	@Test
+	fun setUnset() {
+		assertEquals(1, bit(0))
+		assertEquals(2, bit(1))
+		assertEquals(4, bit(2))
+		assertEquals(8, bit(3))
+		assertEquals(0b0101, 0b0111.unsetBits(0b0010))
+		assertEquals(0b0110, 0b0100.setBits(0b0010))
+	}
 }

@@ -119,3 +119,12 @@ fun Int.extractBool(offset: Int) = this.extract(offset)
 
 //infix fun Int.hasFlag(bits: Int) = (this and bits) == bits
 infix fun Int.hasFlags(bits: Int) = (this and bits) == bits
+
+/** Creates an integer with only bit [bit] set */
+fun bit(bit: Int) = 1 shl bit
+
+/** Returns the integer [this] without the [bits] set */
+fun Int.unsetBits(bits: Int) = this and bits.inv()
+
+/** Returns the integer [this] with the [bits] set */
+fun Int.setBits(bits: Int) = this or bits
