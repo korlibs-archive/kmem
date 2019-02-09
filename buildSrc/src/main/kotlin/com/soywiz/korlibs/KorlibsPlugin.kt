@@ -21,6 +21,9 @@ class KorlibsPlugin : Plugin<Project> {
         configureTargetNative()
         configureTargetJavaScript()
         configureTargetJVM()
+
+        // Publishing
+        configurePublishing()
     }
 }
 
