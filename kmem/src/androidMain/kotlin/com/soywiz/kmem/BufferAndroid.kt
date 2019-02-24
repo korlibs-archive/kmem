@@ -7,9 +7,9 @@ import java.nio.*
 import java.util.*
 
 private fun java.nio.Buffer.checkSliceBounds(offset: Int, size: Int) {
-	//val end = offset + size - 1
-	//if (offset !in 0 until this.capacity()) error("offset=$offset, size=$size not inside ${this.capacity()}")
-	//if (end !in 0 until this.capacity()) error("offset=$offset, size=$size not inside ${this.capacity()}")
+    //val end = offset + size - 1
+    //if (offset !in 0 until this.capacity()) error("offset=$offset, size=$size not inside ${this.capacity()}")
+    //if (end !in 0 until this.capacity()) error("offset=$offset, size=$size not inside ${this.capacity()}")
 }
 
 fun ByteBuffer.slice(offset: Int, size: Int): ByteBuffer = run { checkSliceBounds(offset, size); val out = this.duplicate(); (out as java.nio.Buffer).position(this.position() + offset); (out as java.nio.Buffer).limit(out.position() + size); return out }
@@ -17,7 +17,12 @@ fun ShortBuffer.slice(offset: Int, size: Int): ShortBuffer = run { checkSliceBou
 fun IntBuffer.slice(offset: Int, size: Int): IntBuffer = run { checkSliceBounds(offset, size); val out = this.duplicate(); (out as java.nio.Buffer).position(this.position() + offset); (out as java.nio.Buffer).limit(out.position() + size); return out }
 fun FloatBuffer.slice(offset: Int, size: Int): FloatBuffer = run { checkSliceBounds(offset, size); val out = this.duplicate(); (out as java.nio.Buffer).position(this.position() + offset); (out as java.nio.Buffer).limit(out.position() + size); return out }
 fun DoubleBuffer.slice(offset: Int, size: Int): DoubleBuffer = run { checkSliceBounds(offset, size); val out = this.duplicate(); (out as java.nio.Buffer).position(this.position() + offset); (out as java.nio.Buffer).limit(out.position() + size); return out }
-actual class MemBuffer(val buffer: ByteBuffer, val size: Int)
+actual class MemBuffer(val buffer: ByteBuffer, val size: Int) {
+    val sbuffer = buffer.order(ByteOrder.nativeOrder()).asShortBuffer()
+    val ibuffer = buffer.order(ByteOrder.nativeOrder()).asIntBuffer()
+    val fbuffer = buffer.order(ByteOrder.nativeOrder()).asFloatBuffer()
+    val dbuffer = buffer.order(ByteOrder.nativeOrder()).asDoubleBuffer()
+}
 actual fun MemBufferAlloc(size: Int): MemBuffer = MemBuffer(ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder()), size)
 actual fun MemBufferAllocNoDirect(size: Int): MemBuffer = MemBuffer(ByteBuffer.allocate(size).order(ByteOrder.nativeOrder()), size)
 actual fun MemBufferWrap(array: ByteArray): MemBuffer = MemBuffer(ByteBuffer.wrap(array).order(ByteOrder.nativeOrder()), array.size)
@@ -83,14 +88,44 @@ actual val Float64Buffer.size: Int get() = (jbuffer as java.nio.Buffer).limit() 
 actual operator fun Float64Buffer.get(index: Int): Double = jbuffer.get(offset + index)
 actual operator fun Float64Buffer.set(index: Int, value: Double): Unit = run { jbuffer.put(offset + index, value) }
 
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { dst.buffer.slice(dstPos, size).put(src.buffer.slice(srcPos, size)) }
-actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceInt8Buffer(dstPos, size) as Int8Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit = run { (src.sliceInt8Buffer(srcPos, size) as Int8Buffer).jbuffer.get(dst, dstPos, size) }
-actual fun arraycopy(src: ShortArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceInt16Buffer(dstPos, size) as Int16Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit = run { (src.sliceInt16Buffer(srcPos, size) as Int16Buffer).jbuffer.get(dst, dstPos, size) }
-actual fun arraycopy(src: IntArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceInt32Buffer(dstPos, size) as Int32Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit = run { (src.sliceInt32Buffer(srcPos, size) as Int32Buffer).jbuffer.get(dst, dstPos, size) }
-actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceFloat32Buffer(dstPos, size) as Float32Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit = run { (src.sliceFloat32Buffer(srcPos, size) as Float32Buffer).jbuffer.get(dst, dstPos, size) }
-actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit = run { (dst.sliceFloat64Buffer(dstPos, size) as Float64Buffer).jbuffer.put(src, srcPos, size) }
-actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit = run { (src.sliceFloat64Buffer(srcPos, size) as Float64Buffer).jbuffer.get(dst, dstPos, size) }
+inline operator fun ByteBuffer.set(index: Int, value: Byte) = this.put(index, value)
+inline operator fun ShortBuffer.set(index: Int, value: Short) = this.put(index, value)
+inline operator fun IntBuffer.set(index: Int, value: Int) = this.put(index, value)
+inline operator fun FloatBuffer.set(index: Int, value: Float) = this.put(index, value)
+inline operator fun DoubleBuffer.set(index: Int, value: Double) = this.put(index, value)
+inline operator fun MemBuffer.set(index: Int, value: Byte) = this.buffer.put(index, value)
+inline operator fun MemBuffer.get(index: Int): Byte = this.buffer.get(index)
+
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
+}
+actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
+}
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
+}
+actual fun arraycopy(src: ShortArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst.sbuffer[dstPos + n] = src[srcPos + n]
+}
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst[dstPos + n] = src.sbuffer[srcPos + n]
+}
+actual fun arraycopy(src: IntArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst.ibuffer[dstPos + n] = src[srcPos + n]
+}
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst[dstPos + n] = src.ibuffer[srcPos + n]
+}
+actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst.fbuffer[dstPos + n] = src[srcPos + n]
+}
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst[dstPos + n] = src.fbuffer[srcPos + n]
+}
+actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst.dbuffer[dstPos + n] = src[srcPos + n]
+}
+actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit {
+    for (n in 0 until size) dst[dstPos + n] = src.dbuffer[srcPos + n]
+}
