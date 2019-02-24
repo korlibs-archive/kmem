@@ -1,5 +1,7 @@
 package com.soywiz.korlibs
 
+import groovy.util.Node
+import groovy.xml.XmlUtil
 import org.gradle.api.*
 import org.gradle.api.artifacts.dsl.*
 import org.gradle.api.tasks.*
@@ -18,7 +20,7 @@ class MultiOutputStream(val outs: List<OutputStream>) : OutputStream() {
 // Extensions
 operator fun File.get(name: String) = File(this, name)
 
-var File.text get() = this.readText(); set(value) = run { this.writeText(value) }
+var File.text get() = this.readText(); set(value) = run { this.also { it.parentFile.mkdirs() }.writeText(value) }
 
 // Gradle extensions
 operator fun Project.invoke(callback: Project.() -> Unit) = callback(this)
@@ -40,3 +42,6 @@ fun Project.gkotlin(callback: KotlinMultiplatformExtension.() -> Unit) = gkotlin
 
 val Project.kotlin get() = extensions.getByType(KotlinMultiplatformExtension::class.java)
 fun Project.kotlin(callback: KotlinMultiplatformExtension.() -> Unit) = gkotlin.apply(callback)
+
+// Groovy tools
+fun Node.toXmlString() = XmlUtil.serialize(this)
