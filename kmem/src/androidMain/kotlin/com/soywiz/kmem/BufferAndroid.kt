@@ -96,36 +96,46 @@ inline operator fun DoubleBuffer.set(index: Int, value: Double) = this.put(index
 inline operator fun MemBuffer.set(index: Int, value: Byte) = this.buffer.put(index, value)
 inline operator fun MemBuffer.get(index: Int): Byte = this.buffer.get(index)
 
+private inline fun <T> arraycopy(size: Int, src: Any?, srcPos: Int, dst: Any?, dstPos: Int, setDst: (Int, T) -> Unit, getSrc: (Int) -> T) {
+    val overlapping = src === dst && dstPos > srcPos
+    if (overlapping) {
+        var n = size
+        while (--n >= 0) setDst(dstPos + n, getSrc(srcPos + n))
+    } else {
+        for (n in 0 until size) setDst(dstPos + n, getSrc(srcPos + n))
+    }
+}
+
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src[it] })
 }
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src[it] })
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst[dstPos + n] = src[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src[it] })
 }
 actual fun arraycopy(src: ShortArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst.sbuffer[dstPos + n] = src[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst.sbuffer[it] = value }, { src[it] })
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst[dstPos + n] = src.sbuffer[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src.sbuffer[it] })
 }
 actual fun arraycopy(src: IntArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst.ibuffer[dstPos + n] = src[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst.ibuffer[it] = value }, { src[it] })
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst[dstPos + n] = src.ibuffer[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src.ibuffer[it] })
 }
 actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst.fbuffer[dstPos + n] = src[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst.fbuffer[it] = value }, { src[it] })
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst[dstPos + n] = src.fbuffer[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src.fbuffer[it] })
 }
 actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst.dbuffer[dstPos + n] = src[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst.dbuffer[it] = value }, { src[it] })
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit {
-    for (n in 0 until size) dst[dstPos + n] = src.dbuffer[srcPos + n]
+    arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src.dbuffer[it] })
 }
