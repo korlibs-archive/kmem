@@ -15,6 +15,9 @@ inline fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, s
 inline fun arraycopy(src: ShortArray, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit =
     run { src.copyInto(dst, dstPos, srcPos, srcPos + size) }
 
+inline fun arraycopy(src: CharArray, srcPos: Int, dst: CharArray, dstPos: Int, size: Int): Unit =
+    run { src.copyInto(dst, dstPos, srcPos, srcPos + size) }
+
 inline fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit =
     run { src.copyInto(dst, dstPos, srcPos, srcPos + size) }
 
