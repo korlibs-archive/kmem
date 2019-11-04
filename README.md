@@ -1,10 +1,28 @@
-# ![](https://raw.githubusercontent.com/korlibs/korlibs-logos/master/256/kmem.png)
+<p align="center">
+    <img alt="Korio" src="https://raw.githubusercontent.com/korlibs/korlibs-logos/master/128/kmem.png" />
+</p>
 
-This library provides extension methods and properties useful for memory handling, and bit manipulation, as well as array and buffer similar to JS typed arrays.
+<h2 align="center">Kmem</h2>
 
-[![Build Status](https://travis-ci.org/korlibs/kmem.svg?branch=master)](https://travis-ci.org/korlibs/kmem)
-[![Maven Version](https://img.shields.io/github/tag/korlibs/kmem.svg?style=flat&label=maven)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22kmem%22)
-[![Gitter](https://img.shields.io/gitter/room/korlibs/korlibs.svg)](https://gitter.im/korlibs/Lobby)
+<p align="center">
+    This library provides extension methods and properties useful for memory handling, and bit manipulation, as well as array and buffer similar to JS typed arrays.
+</p>
+
+<!-- BADGES -->
+<p align="center">
+	<a href="https://travis-ci.org/korlibs/kmem"><img alt="Build Status" src="https://travis-ci.org/korlibs/kmem.svg?branch=master" /></a>
+	<a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22kmem%22"><img alt="Maven Version" src="https://img.shields.io/github/tag/korlibs/kmem.svg?style=flat&label=maven" /></a>
+	<a href="https://slack.soywiz.com/"><img alt="Slack" src="https://img.shields.io/badge/chat-on%20slack-green?style=flat&logo=slack" /></a>
+</p>
+<!-- /BADGES -->
+
+<!-- SUPPORT -->
+<h2 align="center">Support kmem</h2>
+<p align="center">
+If you like kmem, or want your company logo here, please consider <a href="https://github.com/sponsors/soywiz">becoming a sponsor ★</a>,<br />
+in addition to ensure the continuity of the project, you will get exclusive content.
+</p>
+<!-- /SUPPORT -->
 
 ### Full Documentation: <https://korlibs.soywiz.com/kmem/>
 
