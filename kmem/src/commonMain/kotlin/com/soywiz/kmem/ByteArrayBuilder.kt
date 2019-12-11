@@ -2,6 +2,10 @@ package com.soywiz.kmem
 
 import kotlin.math.max
 
+/**
+ * Analogous to [StringBuilder] but for [ByteArray]. Allows to [append] values to end calling [toByteArray].
+ * Provides some methods like [s16LE] or [f32BE] to append specific bit representations easily.
+ */
 class ByteArrayBuilder(var data: ByteArray, size: Int = data.size, val allowGrow: Boolean = true) {
     constructor(initialCapacity: Int = 4096) : this(ByteArray(initialCapacity), 0)
 
@@ -115,11 +119,14 @@ fun ByteArrayBuilderBE.f64(v: Double) = bab.f64BE(v)
 fun ByteArrayBuilderBE.clear() = bab.clear()
 fun ByteArrayBuilderBE.toByteArray(): ByteArray = bab.toByteArray()
 
+/** Analogous to [buildString] but for [ByteArray] */
 inline fun buildByteArray(capacity: Int = 4096, callback: ByteArrayBuilder.() -> Unit): ByteArray =
     ByteArrayBuilder(capacity).apply(callback).toByteArray()
 
+/** Analogous to [buildString] but for [ByteArray] (Provides shortcuts for writing Little Endian bit values) */
 inline fun buildByteArrayLE(capacity: Int = 4096, callback: ByteArrayBuilderLE.() -> Unit): ByteArray =
     ByteArrayBuilderLE(ByteArrayBuilder(capacity)).apply(callback).toByteArray()
 
+/** Analogous to [buildString] but for [ByteArray] (Provides shortcuts for writing Big Endian bit values) */
 inline fun buildByteArrayBE(capacity: Int = 4096, callback: ByteArrayBuilderBE.() -> Unit): ByteArray =
     ByteArrayBuilderBE(ByteArrayBuilder(capacity)).apply(callback).toByteArray()

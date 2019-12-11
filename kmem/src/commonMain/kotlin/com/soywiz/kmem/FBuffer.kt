@@ -1,5 +1,8 @@
 package com.soywiz.kmem
 
+/**
+ * FastBuffer holding a chunk of [mem] memory
+ */
 class FBuffer private constructor(val mem: MemBuffer, val size: Int = mem.size) {
 	val buffer: MemBuffer get() = mem
 	val data: DataBuffer = mem.getData()
