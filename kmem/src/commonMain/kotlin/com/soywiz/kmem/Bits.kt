@@ -1,8 +1,13 @@
+@file:UseExperimental(ExperimentalStdlibApi::class)
 @file:Suppress("NOTHING_TO_INLINE")
 
 package com.soywiz.kmem
 
-expect fun clz32(v: Int): Int
+import kotlin.rotateLeft as rotateLeftKotlin
+import kotlin.rotateRight as rotateRightKotlin
+
+@Deprecated("", ReplaceWith("v.countLeadingZeros()"))
+fun clz32(v: Int): Int = v.countLeadingZeros()
 
 inline fun Float.reinterpretAsInt() = this.toBits()
 inline fun Int.reinterpretAsFloat() = Float.fromBits(this)
@@ -10,17 +15,14 @@ inline fun Int.reinterpretAsFloat() = Float.fromBits(this)
 inline fun Double.reinterpretAsLong() = this.toBits()
 inline fun Long.reinterpretAsDouble() = Double.fromBits(this)
 
-@UseExperimental(ExperimentalUnsignedTypes::class)
-fun UInt.rotateLeft(bits: Int): UInt = (this shl bits) or (this shr (32 - bits))
+fun UInt.rotateLeft(bits: Int): UInt = this.rotateLeftKotlin(bits)
+fun UInt.rotateRight(bits: Int): UInt = this.rotateRightKotlin(bits)
 
-@UseExperimental(ExperimentalUnsignedTypes::class)
-fun UInt.rotateRight(bits: Int): UInt = (this shl (32 - bits)) or (this shr bits)
+fun Int.rotateLeft(bits: Int): Int = this.rotateLeftKotlin(bits)
+fun Int.rotateRight(bits: Int): Int = this.rotateRightKotlin(bits)
 
-fun Int.rotateLeft(bits: Int): Int = (this shl bits) or (this ushr (32 - bits))
-fun Int.rotateRight(bits: Int): Int = (this shl (32 - bits)) or (this ushr bits)
-
-fun Long.rotateLeft(bits: Int): Long = (this shl bits) or (this ushr (64 - bits))
-fun Long.rotateRight(bits: Int): Long = (this shl (64 - bits)) or (this ushr bits)
+fun Long.rotateLeft(bits: Int): Long = this.rotateLeftKotlin(bits)
+fun Long.rotateRight(bits: Int): Long = this.rotateRightKotlin(bits)
 
 fun Short.reverseBytes(): Short {
     val low = ((this.toInt() ushr 0) and 0xFF)
@@ -54,22 +56,9 @@ fun Int.reverseBits(): Int {
     return v
 }
 
-inline fun Int.countLeadingZeros(): Int = clz32(this)
+inline fun Int.countLeadingZeros(): Int = this.countLeadingZeroBits()
 
-fun Int.countTrailingZeros(): Int {
-    if (this == 0) return 32
-    var n = this
-    var c = 32
-    n = n and (-n)
-    if (n != 0) c--
-    if ((n and 0x0000FFFF) != 0) c -= 16
-    if ((n and 0x00FF00FF) != 0) c -= 8
-    if ((n and 0x0F0F0F0F) != 0) c -= 4
-    if ((n and 0x33333333) != 0) c -= 2
-    if ((n and 0x55555555) != 0) c -= 1
-    return c
-}
-
+fun Int.countTrailingZeros(): Int = this.countTrailingZeroBits()
 fun Int.countLeadingOnes(): Int = this.inv().countLeadingZeros()
 fun Int.countTrailingOnes(): Int = this.inv().countTrailingZeros()
 

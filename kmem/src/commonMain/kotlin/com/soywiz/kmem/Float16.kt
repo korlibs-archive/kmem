@@ -1,9 +1,27 @@
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING", "NOTHING_TO_INLINE")
+
 package com.soywiz.kmem
 
 import kotlin.math.*
 
+/**
+ * Represents a floating point value of 16 bits. Also known as Half-precision floating-point format (IEEE 754-2008).
+ * This is an inline class backed by a [UShort].
+ * No operations defined for this class, you should convert from and into other values.
+ * To get its internal representation, call the [toRawBits] function.
+ *
+ * Mantissa/fraction: 10 bits
+ * Exponent: 5 bits
+ * Sign: 1 bit
+ *
+ * Significance: stored 10 bits (but can achieve 11 bits of integral precision)
+ *
+ * @see https://en.wikipedia.org/wiki/Half-precision_floating-point_format
+ */
+
 @UseExperimental(ExperimentalUnsignedTypes::class)
 inline class Float16(val rawBits: UShort) {
+    @PublishedApi
     internal constructor(value: Double) : this(doubleToIntBits(value))
 
     val value: Double get() = intBitsToDouble(rawBits)
@@ -11,7 +29,9 @@ inline class Float16(val rawBits: UShort) {
     fun toFloat() = value.toFloat()
     fun toDouble() = value
 
+    /** Return the internal bits representation (16-bits) as [UShort] */
     fun toBits(): UShort = rawBits
+    /** Return the internal bits representation (16-bits) as [UShort] */
     fun toRawBits(): UShort = rawBits
 
     override fun toString(): String = toDouble().toString()
@@ -83,6 +103,11 @@ inline class Float16(val rawBits: UShort) {
     }
 }
 
+/** Converts value into [Float16] */
 fun Int.toFloat16(): Float16 = Float16(this.toDouble())
+/** Converts value into [Float16] */
 fun Double.toFloat16(): Float16 = Float16(this)
+/** Converts value into [Float16] */
 fun Float.toFloat16(): Float16 = Float16(this.toDouble())
+/** Converts value into [Float16] */
+inline fun Number.toFloat16(): Float16 = Float16(this.toDouble())
