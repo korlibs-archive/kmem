@@ -10,8 +10,8 @@
 
 <!-- BADGES -->
 <p align="center">
-	<a href="https://travis-ci.org/korlibs/kmem"><img alt="Build Status" src="https://travis-ci.org/korlibs/kmem.svg?branch=master" /></a>
-	<a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22kmem%22"><img alt="Maven Version" src="https://img.shields.io/github/tag/korlibs/kmem.svg?style=flat&label=maven" /></a>
+	<a href="https://github.com/korlibs/kmem/actions"><img alt="Build Status" src="https://github.com/korlibs/kmem/workflows/CI/badge.svg" /></a>
+	<a href="https://bintray.com/korlibs/korlibs/kmem"><img alt="Maven Version" src="https://img.shields.io/bintray/v/korlibs/korlibs/kmem.svg?style=flat&label=maven" /></a>
 	<a href="https://slack.soywiz.com/"><img alt="Slack" src="https://img.shields.io/badge/chat-on%20slack-green?style=flat&logo=slack" /></a>
 </p>
 <!-- /BADGES -->
@@ -82,10 +82,10 @@ assertEquals(0x07060504, mem.getAlignedInt32(1))
 ### Usage with gradle
 
 ```
-def kmemVersion = "1.0.0"
+def kmemVersion = "1.9.1"
 
 repositories {
-    maven { url "https://dl.bintray.com/soywiz/soywiz" }
+    maven { url "https://dl.bintray.com/korlibs/korlibs" }
 }
 
 dependencies {
