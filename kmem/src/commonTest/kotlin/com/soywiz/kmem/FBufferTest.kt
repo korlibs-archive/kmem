@@ -29,6 +29,12 @@ class FBufferTest {
 		assertEquals(0x0B0A0908, i32[2])
 	}
 
+    @Test
+    fun testAllocUnaligned() {
+        assertEquals(12, FBuffer.alloc(4 * 3 * 3).f32.size)
+        assertEquals(9, FBuffer.allocUnaligned(4 * 3 * 3).f32.size)
+    }
+
 	@Test
 	fun testArrayCopyOverlapping() {
 		val i32 = Int32BufferAlloc(10)

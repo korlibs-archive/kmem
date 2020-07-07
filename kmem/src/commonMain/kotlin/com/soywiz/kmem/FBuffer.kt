@@ -24,7 +24,8 @@ class FBuffer private constructor(val mem: MemBuffer, val size: Int = mem.size) 
 	companion object {
 		private fun Int.sizeAligned() = (this + 0xF) and 0xF.inv()
 
-		fun alloc(size: Int): FBuffer = FBuffer(MemBufferAlloc(size.sizeAligned()), size)
+        fun allocUnaligned(size: Int): FBuffer = FBuffer(MemBufferAlloc(size), size)
+		fun alloc(size: Int): FBuffer = allocUnaligned(size.sizeAligned())
 		fun wrap(buffer: MemBuffer, size: Int = buffer.size): FBuffer = FBuffer(buffer, size)
 		fun wrap(array: ByteArray): FBuffer = FBuffer(MemBufferWrap(array), array.size)
 
