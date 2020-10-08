@@ -56,12 +56,16 @@ infix fun Int.divCeil(that: Int): Int = if (this % that != 0) (this / that) + 1 
 ////////////////////
 
 /** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be outside the destination range */
+fun Float.convertRange(srcMin: Float, srcMax: Float, dstMin: Float, dstMax: Float): Float = (dstMin + (dstMax - dstMin) * ((this - srcMin) / (srcMax - srcMin)))
+/** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be outside the destination range */
 fun Double.convertRange(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = (dstMin + (dstMax - dstMin) * ((this - srcMin) / (srcMax - srcMin)))
 /** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be outside the destination range */
 fun Int.convertRange(srcMin: Int, srcMax: Int, dstMin: Int, dstMax: Int): Int = (dstMin + (dstMax - dstMin) * ((this - srcMin).toDouble() / (srcMax - srcMin).toDouble())).toInt()
 /** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be outside the destination range */
 fun Long.convertRange(srcMin: Long, srcMax: Long, dstMin: Long, dstMax: Long): Long = (dstMin + (dstMax - dstMin) * ((this - srcMin).toDouble() / (srcMax - srcMin).toDouble())).toLong()
 
+/** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be clamped to the nearest bound */
+fun Float.convertRangeClamped(srcMin: Float, srcMax: Float, dstMin: Float, dstMax: Float): Float = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
 /** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be clamped to the nearest bound */
 fun Double.convertRangeClamped(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
 /** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be clamped to the nearest bound */
@@ -113,16 +117,30 @@ infix fun Double.umod(other: Double): Double {
 fun Int.nextAlignedTo(align: Int) = if (this.isAlignedTo(align)) this else (((this / align) + 1) * align)
 /** Returns the next value of [this] that is multiple of [align]. If [this] is already multiple, returns itself. */
 fun Long.nextAlignedTo(align: Long) = if (this.isAlignedTo(align)) this else (((this / align) + 1) * align)
+/** Returns the next value of [this] that is multiple of [align]. If [this] is already multiple, returns itself. */
+fun Double.nextAlignedTo(align: Double) = if (this.isAlignedTo(align)) this else (((this / align).toInt() + 1) * align)
 
 /** Returns the previous value of [this] that is multiple of [align]. If [this] is already multiple, returns itself. */
 fun Int.prevAlignedTo(align: Int) = if (this.isAlignedTo(align)) this else nextAlignedTo(align) - align
 /** Returns the previous value of [this] that is multiple of [align]. If [this] is already multiple, returns itself. */
 fun Long.prevAlignedTo(align: Long) = if (this.isAlignedTo(align)) this else nextAlignedTo(align) - align
+/** Returns the previous value of [this] that is multiple of [align]. If [this] is already multiple, returns itself. */
+fun Double.prevAlignedTo(align: Double) = if (this.isAlignedTo(align)) this else nextAlignedTo(align) - align
 
 /** Returns whether [this] is multiple of [alignment] */
 fun Int.isAlignedTo(alignment: Int): Boolean = alignment == 0 || (this % alignment) == 0
 /** Returns whether [this] is multiple of [alignment] */
 fun Long.isAlignedTo(alignment: Long): Boolean = alignment == 0L || (this % alignment) == 0L
+/** Returns whether [this] is multiple of [alignment] */
+fun Double.isAlignedTo(alignment: Double): Boolean = alignment == 0.0 || (this % alignment) == 0.0
+
+/** Returns the previous or next value of [this] that is multiple of [align]. If [this] is already multiple, returns itself. */
+fun Double.nearestAlignedTo(align: Double): Double {
+    val prev = this.prevAlignedTo(align)
+    val next = this.nextAlignedTo(align)
+    return if ((this - prev).absoluteValue < (this - next).absoluteValue) prev else next
+}
+
 
 ////////////////////
 ////////////////////
