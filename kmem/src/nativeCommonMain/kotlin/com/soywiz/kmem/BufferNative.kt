@@ -13,16 +13,18 @@ actual fun MemBufferAllocNoDirect(size: Int): MemBuffer = MemBuffer(ByteArray(si
 actual fun MemBufferWrap(array: ByteArray): MemBuffer = MemBuffer(array)
 actual inline val MemBuffer.size: Int get() = data.size
 
-actual fun MemBuffer._sliceInt8Buffer(offset: Int, size: Int): Int8Buffer =
-    Int8Buffer(this, offset * 1, size)
-actual fun MemBuffer._sliceInt16Buffer(offset: Int, size: Int): Int16Buffer =
-    Int16Buffer(this, offset * 2, size)
-actual fun MemBuffer._sliceInt32Buffer(offset: Int, size: Int): Int32Buffer =
-    Int32Buffer(this, offset * 4, size)
-actual fun MemBuffer._sliceFloat32Buffer(offset: Int, size: Int): Float32Buffer =
-    Float32Buffer(this, offset * 4, size)
-actual fun MemBuffer._sliceFloat64Buffer(offset: Int, size: Int): Float64Buffer =
-    Float64Buffer(this, offset * 8, size)
+actual fun MemBuffer._sliceInt8Buffer(offset: Int, size: Int): Int8Buffer = Int8Buffer(this, offset * 1, size)
+actual fun MemBuffer._sliceInt16Buffer(offset: Int, size: Int): Int16Buffer = Int16Buffer(this, offset * 2, size)
+actual fun MemBuffer._sliceInt32Buffer(offset: Int, size: Int): Int32Buffer = Int32Buffer(this, offset * 4, size)
+actual fun MemBuffer._sliceFloat32Buffer(offset: Int, size: Int): Float32Buffer = Float32Buffer(this, offset * 4, size)
+actual fun MemBuffer._sliceFloat64Buffer(offset: Int, size: Int): Float64Buffer = Float64Buffer(this, offset * 8, size)
+
+// @TODO: https://youtrack.jetbrains.com/issue/KT-46427
+//@SymbolName("Kotlin_ByteArray_setFloatAtUnsafe") public external fun ByteArray.setFloatAtUnsafe(index: Int, value: Float)
+//@SymbolName("Kotlin_ByteArray_getFloatAtUnsafe") public external fun ByteArray.getFloatAtUnsafe(index: Int): Float
+
+private inline fun ByteArray.setFloatAtUnsafe(index: Int, value: Float) = setFloatAt(index, value)
+private inline fun ByteArray.getFloatAtUnsafe(index: Int): Float = getFloatAt(index)
 
 actual typealias DataBuffer = MemBuffer
 actual val DataBuffer.mem: MemBuffer get() = this
@@ -30,129 +32,121 @@ actual fun MemBuffer.getData(): DataBuffer = this
 actual fun DataBuffer.getByte(index: Int): Byte = data.get(index)
 actual fun DataBuffer.getShort(index: Int): Short = data.getShortAt(index)
 actual fun DataBuffer.getInt(index: Int): Int = data.getIntAt(index)
-actual fun DataBuffer.getFloat(index: Int): Float = data.getFloatAt(index)
+actual fun DataBuffer.getFloat(index: Int): Float = data.getFloatAtUnsafe(index)
 actual fun DataBuffer.getDouble(index: Int): Double = data.getDoubleAt(index)
 actual fun DataBuffer.setByte(index: Int, value: Byte): Unit = data.set(index, value)
 actual fun DataBuffer.setShort(index: Int, value: Short): Unit = data.setShortAt(index, value)
 actual fun DataBuffer.setInt(index: Int, value: Int): Unit = data.setIntAt(index, value)
-actual fun DataBuffer.setFloat(index: Int, value: Float): Unit = data.setFloatAt(index, value)
+actual fun DataBuffer.setFloat(index: Int, value: Float): Unit = data.setFloatAtUnsafe(index, value)
 actual fun DataBuffer.setDouble(index: Int, value: Double): Unit = data.setDoubleAt(index, value)
 
+@PublishedApi
+internal const val BYTE_SIZE = 1
+
 actual class Int8Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size: Int) {
-    companion object {
-        const val SIZE = 1
-    }
-    val MEM_OFFSET = byteOffset / SIZE
-    //val MSIZE = size / SIZE // @TODO: Caused problems with Kotlin/Native because: #define	MSIZE		(1 << MSIZESHIFT) in param.h
-    val MEM_SIZE = size / SIZE
-    fun getByteIndex(index: Int) = byteOffset + index * SIZE
+    val MEM_OFFSET = byteOffset / BYTE_SIZE
+    val MEM_SIZE = size / BYTE_SIZE
+    inline fun getByteIndex(index: Int) = byteOffset + index * BYTE_SIZE
 }
-actual val Int8Buffer.mem: MemBuffer get() = mbuffer
-actual val Int8Buffer.offset: Int get() = MEM_OFFSET
-actual val Int8Buffer.size: Int get() = MEM_SIZE
+actual inline val Int8Buffer.mem: MemBuffer get() = mbuffer
+actual inline val Int8Buffer.offset: Int get() = MEM_OFFSET
+actual inline val Int8Buffer.size: Int get() = MEM_SIZE
 actual operator fun Int8Buffer.get(index: Int): Byte = mbuffer.getByte(getByteIndex(index))
 actual operator fun Int8Buffer.set(index: Int, value: Byte): Unit = mbuffer.setByte(getByteIndex(index), value)
 
+@PublishedApi
+internal const val SHORT_SIZE = 2
+
 actual class Int16Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size: Int) {
-    companion object {
-        const val SIZE = 2
-    }
-    val MEM_OFFSET = byteOffset / SIZE
-    val MEM_SIZE = size / SIZE
-    fun getByteIndex(index: Int) = byteOffset + index * SIZE
+    val MEM_OFFSET = byteOffset / SHORT_SIZE
+    val MEM_SIZE = size / SHORT_SIZE
+    inline fun getByteIndex(index: Int) = byteOffset + index * SHORT_SIZE
 }
-actual val Int16Buffer.mem: MemBuffer get() = mbuffer
-actual val Int16Buffer.offset: Int get() = MEM_OFFSET
-actual val Int16Buffer.size: Int get() = MEM_SIZE
+actual inline val Int16Buffer.mem: MemBuffer get() = mbuffer
+actual inline val Int16Buffer.offset: Int get() = MEM_OFFSET
+actual inline val Int16Buffer.size: Int get() = MEM_SIZE
 actual operator fun Int16Buffer.get(index: Int): Short = mbuffer.getShort(getByteIndex(index))
 actual operator fun Int16Buffer.set(index: Int, value: Short): Unit = mbuffer.setShort(getByteIndex(index), value)
 
+@PublishedApi
+internal const val INT_SIZE = 4
+
 actual class Int32Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size: Int) {
-    companion object {
-        const val SIZE = 4
-    }
-    val MEM_OFFSET = byteOffset / SIZE
-    val MEM_SIZE = size / SIZE
-    fun getByteIndex(index: Int) = byteOffset + index * SIZE
+    val MEM_OFFSET = byteOffset / INT_SIZE
+    val MEM_SIZE = size / INT_SIZE
+    inline fun getByteIndex(index: Int) = byteOffset + index * INT_SIZE
 }
-actual val Int32Buffer.mem: MemBuffer get() = mbuffer
-actual val Int32Buffer.offset: Int get() = MEM_OFFSET
-actual val Int32Buffer.size: Int get() = MEM_SIZE
+actual inline val Int32Buffer.mem: MemBuffer get() = mbuffer
+actual inline val Int32Buffer.offset: Int get() = MEM_OFFSET
+actual inline val Int32Buffer.size: Int get() = MEM_SIZE
 actual operator fun Int32Buffer.get(index: Int): Int = mbuffer.getInt(getByteIndex(index))
 actual operator fun Int32Buffer.set(index: Int, value: Int): Unit = mbuffer.setInt(getByteIndex(index), value)
 
+@PublishedApi
+internal const val FLOAT_SIZE = 4
+
 actual class Float32Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size: Int) {
-    companion object {
-        const val SIZE = 4
-    }
-    val MEM_OFFSET = byteOffset / SIZE
-    val MEM_SIZE = size / SIZE
-    fun getByteIndex(index: Int) = byteOffset + index * SIZE
+    val MEM_OFFSET = byteOffset / FLOAT_SIZE
+    val MEM_SIZE = size / FLOAT_SIZE
+    inline fun getByteIndex(index: Int) = byteOffset + index * FLOAT_SIZE
 }
-actual val Float32Buffer.mem: MemBuffer get() = mbuffer
-actual val Float32Buffer.offset: Int get() = MEM_OFFSET
-actual val Float32Buffer.size: Int get() = MEM_SIZE
+actual inline val Float32Buffer.mem: MemBuffer get() = mbuffer
+actual inline val Float32Buffer.offset: Int get() = MEM_OFFSET
+actual inline val Float32Buffer.size: Int get() = MEM_SIZE
 actual operator fun Float32Buffer.get(index: Int): Float = mbuffer.getFloat(getByteIndex(index))
 actual operator fun Float32Buffer.set(index: Int, value: Float): Unit = mbuffer.setFloat(getByteIndex(index), value)
 
+@PublishedApi
+internal const val DOUBLE_SIZE = 8
+
 actual class Float64Buffer(val mbuffer: MemBuffer, val byteOffset: Int, val size: Int) {
-    companion object {
-        const val SIZE = 8
-    }
-    val MEM_OFFSET = byteOffset / SIZE
-    val MEM_SIZE = size / SIZE
-    fun getByteIndex(index: Int) = byteOffset + index * SIZE
+    val MEM_OFFSET = byteOffset / DOUBLE_SIZE
+    val MEM_SIZE = size / DOUBLE_SIZE
+    inline fun getByteIndex(index: Int) = byteOffset + index * DOUBLE_SIZE
 }
-actual val Float64Buffer.mem: MemBuffer get() = mbuffer
-actual val Float64Buffer.offset: Int get() = MEM_OFFSET
-actual val Float64Buffer.size: Int get() = MEM_SIZE
+actual inline val Float64Buffer.mem: MemBuffer get() = mbuffer
+actual inline val Float64Buffer.offset: Int get() = MEM_OFFSET
+actual inline val Float64Buffer.size: Int get() = MEM_SIZE
 actual operator fun Float64Buffer.get(index: Int): Double = mbuffer.getDouble(getByteIndex(index))
 actual operator fun Float64Buffer.set(index: Int, value: Double): Unit = mbuffer.setDouble(getByteIndex(index), value)
 
-// @TODO: Can we do this without pins that are data classes? Since GC is not going to be executed inside memmove?
-inline fun <T : Any, R : Any> anyArrayCopy(input: T, inputAddress: (Pinned<T>) -> CPointer<*>?, output: R, outputAddress: (Pinned<R>) -> CPointer<*>?, sizeBytes: Int) {
-    if (sizeBytes == 0) return
-    output.usePinned { out ->
-        input.usePinned { inp ->
-            val outp = outputAddress(out)
-            val inpp = inputAddress(inp)
-            memmove(outp, inpp, sizeBytes.convert())
-        }
-    }
-}
+@PublishedApi internal const val SHORT_SIZE_BYTES = 2
+@PublishedApi internal const val INT_SIZE_BYTES = 4
+@PublishedApi internal const val FLOAT_SIZE_BYTES = 4
+@PublishedApi internal const val DOUBLE_SIZE_BYTES = 8
 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src.data, { it.addressOf(srcPos) }, dst.data, { it.addressOf(dstPos) }, size * Byte.SIZE_BYTES)
+    src.data.copyInto(dst.data, dstPos, srcPos, srcPos + size)
 }
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src, { it.addressOf(srcPos) }, dst.data, { it.addressOf(dstPos) }, size * Byte.SIZE_BYTES)
+    src.copyInto(dst.data, dstPos, srcPos, srcPos + size)
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src.data, { it.addressOf(srcPos) }, dst, { it.addressOf(dstPos * Byte.SIZE_BYTES) }, size * Byte.SIZE_BYTES)
+    src.data.copyInto(dst, dstPos, srcPos, srcPos + size)
 }
 actual fun arraycopy(src: ShortArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src, { it.addressOf(srcPos) }, dst.data, { it.addressOf(dstPos * Short.SIZE_BYTES) }, size * Short.SIZE_BYTES)
+    for (n in 0 until size) dst.data.setShortAt((dstPos + n) * SHORT_SIZE_BYTES, src[srcPos + n])
 }
 actual fun arraycopy(src: IntArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src, { it.addressOf(srcPos) }, dst.data, { it.addressOf(dstPos * Int.SIZE_BYTES) }, size * Int.SIZE_BYTES)
+    for (n in 0 until size) dst.data.setIntAt((dstPos + n) * INT_SIZE_BYTES, src[srcPos + n])
 }
 actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src, { it.addressOf(srcPos) }, dst.data, { it.addressOf(dstPos * Float.SIZE_BYTES) }, size * Float.SIZE_BYTES)
+    for (n in 0 until size) dst.data.setFloatAt((dstPos + n) * FLOAT_SIZE_BYTES, src[srcPos + n])
 }
 actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src, { it.addressOf(srcPos) }, dst.data, { it.addressOf(dstPos * Double.SIZE_BYTES) }, size * Double.SIZE_BYTES)
+    for (n in 0 until size) dst.data.setDoubleAt((dstPos + n) * DOUBLE_SIZE_BYTES, src[srcPos + n])
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src.data, { it.addressOf(srcPos * Short.SIZE_BYTES) }, dst, { it.addressOf(dstPos) }, size * Short.SIZE_BYTES)
+    for (n in 0 until size) dst[dstPos + n] = src.data.getShortAt((srcPos + n) * SHORT_SIZE_BYTES)
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src.data, { it.addressOf(srcPos * Int.SIZE_BYTES) }, dst, { it.addressOf(dstPos) }, size * Int.SIZE_BYTES)
+    for (n in 0 until size) dst[dstPos + n] = src.data.getIntAt((srcPos + n) * INT_SIZE_BYTES)
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src.data, { it.addressOf(srcPos * Float.SIZE_BYTES) }, dst, { it.addressOf(dstPos) }, size * Float.SIZE_BYTES)
+    for (n in 0 until size) dst[dstPos + n] = src.data.getFloatAt((srcPos + n) * FLOAT_SIZE_BYTES)
 }
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit {
-    anyArrayCopy(src.data, { it.addressOf(srcPos * Double.SIZE_BYTES) }, dst, { it.addressOf(dstPos) }, size * Double.SIZE_BYTES)
+    for (n in 0 until size) dst[dstPos + n] = src.data.getDoubleAt((srcPos + n) * DOUBLE_SIZE_BYTES)
 }
 
 actual abstract class Fast32Buffer(val bb: ByteArray)
