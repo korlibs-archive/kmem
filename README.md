@@ -11,18 +11,10 @@
 <!-- BADGES -->
 <p align="center">
 	<a href="https://github.com/korlibs/kmem/actions"><img alt="Build Status" src="https://github.com/korlibs/kmem/workflows/CI/badge.svg" /></a>
-	<a href="https://bintray.com/korlibs/korlibs/kmem"><img alt="Maven Version" src="https://img.shields.io/bintray/v/korlibs/korlibs/kmem.svg?style=flat&label=maven" /></a>
+    <a href="https://search.maven.org/artifact/com.soywiz.korlibs.kmem/kmem"><img alt="Maven Central" src="https://img.shields.io/maven-central/v/com.soywiz.korlibs.kmem/kmem"></a>
 	<a href="https://discord.korge.org/"><img alt="Discord" src="https://img.shields.io/discord/728582275884908604?logo=discord" /></a>
 </p>
 <!-- /BADGES -->
-
-<!-- SUPPORT -->
-<h2 align="center">Support kmem</h2>
-<p align="center">
-If you like kmem, or want your company logo here, please consider <a href="https://github.com/sponsors/soywiz">becoming a sponsor ★</a>,<br />
-in addition to ensure the continuity of the project, you will get exclusive content.
-</p>
-<!-- /SUPPORT -->
 
 ### Full Documentation: <https://korlibs.soywiz.com/kmem/>
 
@@ -82,7 +74,7 @@ assertEquals(0x07060504, mem.getAlignedInt32(1))
 ### Usage with gradle
 
 ```
-def kmemVersion = "1.9.1"
+def kmemVersion = "..." // Find latest version on https://search.maven.org/artifact/com.soywiz.korlibs.kmem/kmem
 
 repositories {
     maven { url "https://dl.bintray.com/korlibs/korlibs" }
@@ -97,7 +89,4 @@ dependencies {
     // For JS only
     implementation "com.soywiz.korlibs.kmem:kmem-js:$kmemVersion"
 }
-
-// settigs.gradle
-enableFeaturePreview('GRADLE_METADATA')
 ```
